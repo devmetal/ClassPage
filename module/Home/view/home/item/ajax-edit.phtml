@@ -1,0 +1,53 @@
+<?php 
+$form = $this->form; $form->prepare(); 
+$form->setAttribute('action', $this->url('items', array(
+    'action' => 'ajax-edit',
+    'params' => array('id' => $this->id)
+), false, true));
+
+$form->setAttribute('class', 'form-inline ajax-form');
+$item = $form->get('item');
+?>
+<?php if ($this->result && $this->result === 'success'): ?>
+<div>
+<div class="item-editor">
+    Sikeres szerkesztés!
+</div>
+</div>
+<?php else: ?>
+<div class="ajax-editor">
+    
+<div class="item-editor">
+<?= $this->form()->openTag($form); ?>
+
+    <?=$this->formHidden($item->get('id'))?>
+    
+    <div class="span-container">
+        <div class="input span4">
+            <?=$this->formLabel($item->get('title'))?>
+            <?=$this->formText($item->get('title'))?>
+            <?=$this->formElementErrors($item->get('title'));?>
+        </div>
+
+        <div class="input span4">
+            <?=$this->formLabel($item->get('category'))?>
+            <?=$this->formSelect($item->get('category'))?>
+            <?=$this->formElementErrors($item->get('category'));?>
+        </div>
+        
+        <div class="input span1">
+            <?=$this->formLabel($item->get('itemNum'))?>
+            <?=$this->formNumber($item->get('itemNum'))?>
+            <?=$this->formElementErrors($item->get('itemNum'));?>
+        </div>
+        
+        
+        <div class="input span1">
+            <label>Mentés</label>
+            <?=$this->formSubmit($form->get('submit'))?>
+        </div>
+    </div>
+<?= $this->form()->closeTag($form); ?>
+</div>
+</div>
+<?php endif; ?>

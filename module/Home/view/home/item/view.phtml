@@ -1,0 +1,40 @@
+<?php $item = $this->item; ?>
+<div class="span12">
+    <div class="page-header">
+        <h1><?=$item->getTitle()?></h1>
+        <span>
+            <?=$item->getUploader()->getNick()?> | 
+            <?=date('Y-m-d',$item->getCreated()->getTimestamp())?>
+        </span>
+    </div>
+    
+    <div class="row">
+        <div class="span6">
+            <h3>Leírás</h3>
+            <p style="text-align:justify">
+                <?php if (($desc = $item->getDesc()) !== NULL): ?>
+                    <?=$desc?>
+                <?php else: ?>
+                    Nem adtak meg leírást
+                <?php endif; ?>
+            </p>
+        </div>
+        <div class="span6">
+            <?php 
+            $commentsN = $item->getComments()->count(); 
+            $comments = $item->getComments();
+            ?>
+            
+            <h3>Kommentek száma: <?=$commentsN?></h3>
+            <?php if ($commentsN > 0): ?>
+            <ul>
+                <?php foreach ($comments as $comment): ?>
+                <li>
+                    <p><?=$comment->getUser()->getNick()?></p>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>

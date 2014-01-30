@@ -1,0 +1,24 @@
+<section>
+    <div class="news">
+        <header>
+            <h1>Friss oktatási hírek</h1>
+        </header>
+    </div>
+</section>
+    
+<script>
+$.get('/news', function(result){
+    $.each(result.feeds, function(index, feed){
+        var feedDiv = $("<article class='feed'></article>");
+        
+        $.each(feed.posts, function(postIndex, post){
+            var postDiv = $("<article class='post'></article>");
+            postDiv.append("<header><a href='"+post.link+"'>"+post.title+"</a></header>");
+            postDiv.append("<div class='desc'>"+post.desc+"</div>");
+            feedDiv.append(postDiv);
+        });
+        
+        $(".news").append(feedDiv);
+    });
+},'json');
+</script>

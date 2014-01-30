@@ -1,0 +1,29 @@
+<section id="category">
+    <hgroup>
+        <h1><?=$this->category->getName()?> - (<?=$this->category->getItems()->count()?>)</h1>
+    </hgroup>
+    
+    <?php $items = $this->category->getItemsOrderByNum() ?>
+    <article>
+        <ul class="accordion">
+            <?php foreach ($items as $item): ?>
+                <li>
+                    <div class="item">
+                        <div class="title">
+                            <?=$item->getTitle()?>
+                        </div>
+                        <div class="content">
+                            <?php $id = $item->getId(); ?>
+                            <a href="#">Letöltés</a>
+                            <a href="#">Kommentek</a>
+                            <a href="#">Részletek</a>
+                        </div>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+        <script>
+        $(".accordion").accordion();
+        </script>
+    </article>
+</section>

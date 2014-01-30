@@ -1,0 +1,50 @@
+<?=$this->doctype()?>
+<html lang="hu">
+    <head>
+        <meta charset="utf-8">
+        <?=$this->headTitle('11C Ez class')?>
+        <?=$this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')?>
+        
+        <?=$this->headLink(array(
+            'rel' => 'shortcut icon', 
+            'type' => 'image/vnd.microsoft.icon', 
+            'href' => $this->basePath() . '/img/favicon.ico'))?>
+        
+        <link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700' rel='stylesheet' type='text/css'>
+        <?=$this->headLink()
+            ->prependStylesheet($this->basePath() . '/css/spans.css')
+            ->prependStylesheet($this->basePath() . '/css/style.css')?>
+        
+        <?php echo $this->headScript()
+            ->prependFile($this->basePath() . '/js/accordion.js')
+            ->prependFile($this->basePath() . '/js/jquery.form.min.js')
+            ->prependFile($this->basePath() . '/js/jquery.upload.js')
+            ->prependFile($this->basePath() . '/js/jquery.min.js')
+            ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+            ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
+        ; ?>
+    </head>
+    <body>
+        <nav>
+            <div class="nav">
+                <div>
+                    <div><a href="<?=$this->url('home')?>">Haza</a></div>
+                </div>
+                <div>
+                    <div><a href="<?=$this->url('items')?>">Tételek</a></div>
+                </div>
+                <div>
+                    <div><a href="<?=$this->url('items', array('action' => 'upload'))?>">Feltöltés</a></div>
+                </div>
+            </div>
+        </nav>
+        <div class="content">
+            <?=$this->content?>
+        </div>
+        <footer>
+            
+        </footer>
+    </body>
+</html>

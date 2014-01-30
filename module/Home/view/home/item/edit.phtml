@@ -1,0 +1,28 @@
+<h1>Szerkesztés</h1>
+<div class="item-edit-form">
+    <?php $form = $this->form; $form->prepare(); ?>
+    
+    <?=$this->horizontalForm()->openTag($form);?>
+    
+        <?php $item = $form->get('item'); ?>
+        <?=$this->formHidden($item->get('id'))?>
+        <?=$this->formHidden($form->get('security'))?>
+    
+        <?=$this->horizontalFormRow($item->get('title'))?>
+        <?=$this->horizontalFormRow($item->get('category'))?>
+        <?=$this->horizontalFormRow($item->get('itemNum'))?>
+        <?=$this->horizontalFormRow($item->get('desc'))?>
+        <?=$this->horizontalFormRow($form->get('submit'))?>
+    
+    <?=$this->horizontalForm()->closeTag($form);?>
+</div>
+
+<?php if( count($form->getMessages()) > 0) : ?>
+<div class="errors">
+    <?=$this->formElementErrors($item->get('title'))?>
+    <?=$this->formElementErrors($item->get('id'))?>
+    <?=$this->formElementErrors($form->get('security'))?>
+    <?=$this->formElementErrors($item->get('category'))?>
+    <?=$this->formElementErrors($item->get('itemNum'))?>
+</div>
+<?php endif; ?>

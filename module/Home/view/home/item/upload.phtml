@@ -1,0 +1,145 @@
+<?php $this->form->prepare(); ?>
+<?php echo $this->form()->openTag($this->form); ?>
+<div id="uploadPanel" style="text-align: center">
+    <?php $elem = $this->form->get('document'); ?>
+    <?php echo $this->formFile($elem); ?>
+</div>
+<?php echo $this->form()->closeTag($this->form); ?>
+
+<div id="uploading">
+    
+</div>
+
+<div id="editing">
+    
+</div>
+
+<script>
+
+    if (window.File && window.FileReader && window.FileList) {
+        var element = initDragAndDropFileUpload();
+        
+        element.bind("drop", function(event) {
+            // Cancel redirection
+            event.stopPropagation();
+            event.preventDefault();
+            event = event.originalEvent;
+            // Access dragged files
+            var files = event.dataTransfer.files;
+            for (var i = 0; i < files.length; i++)
+                uploadStart(files[i]);
+        });
+        
+        $("#document").remove();
+        
+        function uploadStart(file) {
+            var row = $("<div class='row'></div>");
+            var bar = $("<div class='span12'><div class='progress'>\n\
+                    <div class='bar' style='width:0%; text-align:left;'>"+file.name+"</div></div></div>");
+            row.append(bar);
+            $("#uploading").append(row);
+            
+            var onpg = function(e) {
+                var prec = Math.round((e.position / e.total)*100);
+                bar.find(".bar").css("width", prec + "%");
+            };
+            
+            var onSuccess = function(e) {
+                if (e.result === "success") {
+                    row.fadeOut(function(){
+                        $(this).remove();
+                    });
+                    editingStart(e.id);
+                }
+            };
+            
+            $.upload("/items/ajax-upload", file, {upload:{progress:onpg}, success: onSuccess});
+        }
+        
+        function editingStart(id) {
+            $.get('/items/ajax-edit/' + id, function(res) {
+                var $res = $(res);
+                var form = $res.find("form");
+                
+                form.submit(function(){
+                    return submitHander($(this));
+                });
+                
+                $("#editing").append($res);
+                
+            }, 'html');
+        }
+        
+        function submitHander(form) {
+            form.ajaxSubmit({
+                success: function(res) {
+                    var cnt = form.parents('.ajax-editor');
+                    cnt.html("");
+                    cnt.html($(res).find(".item-editor"));
+                    
+                    var newForm = cnt.find("form");
+                    if (newForm) {
+                        newForm.submit(function(){
+                            return submitHander($(this));
+                        });
+                    }
+                }
+            });
+
+            return false;
+        }
+    }
+
+    function initDragAndDropFileUpload() {
+        var element = $("<div>").css("position", "relative");
+        element.append(
+                $("<div>Húzd ide a feltölteni kívánt fájlokat</div>")
+                    .css({
+                        "color":"black",
+                        "margin":"0 auto",
+                        "text-align":"center",
+                        "font-size":"16px",
+                        "font-weight":"bold",
+                        "margin-top":"134px"
+                    })
+        ).append(
+                $("<div>Word, Excel, Pdf, PowerPoint, Txt fájlokat fogadok el</div>")
+                    .css({
+                        "position": "absolute",
+                        "left": "3px",
+                        "bottom": "0px",
+                        "color":"#333",
+                        "font-size":"12px",
+                        "font-style":"italic"
+                    })
+        );
+        
+        element.css({
+            width: "400px",
+            height: "300px",
+            margin: "20px auto",
+            "background-color": "white",
+            border: "3px dashed black"
+        });
+        
+        $("#uploadPanel").prepend(element);
+        
+        element.bind("dragenter", function(e) {
+            // Cancel event
+            e.stopPropagation();
+            e.preventDefault();
+        });
+
+        element.bind("dragover", function(e) {
+            // Set the cursor
+            e.originalEvent.dataTransfer.dropEffect = "copy";
+            // Cancel event
+            e.stopPropagation();
+            e.preventDefault();
+        });
+        
+        return element;
+    }
+
+
+</script>

@@ -1,0 +1,38 @@
+<style>
+    .login-form {
+        margin: 50px auto;
+        max-width: 300px;
+        background-color: white;
+        padding: 10px;
+        border: 1px solid #DDD;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px #999;
+    }
+    .message {
+        color:tomato;
+        font-size: 13px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    body {
+        background-color: #EEE;
+    }
+</style>
+<div class="login-form">
+    <h2>Itt jelentkezz be</h2>
+    <?php
+    $this->form->prepare();
+    echo $this->form()->openTag($this->form);
+    echo $this->formInput($this->form->get('email'));
+    echo $this->formInput($this->form->get('pass'));
+    echo "<label class='checkbox'>Emlékezz rám";
+    echo $this->formCheckbox($this->form->get('remember-me'));
+    echo "</label>";
+    echo $this->formSubmit($this->form->get('submit'));
+    echo $this->form()->closeTag();
+    ?>
+    
+    <?php if ($this->message): ?>
+    <div class="message"><?=$this->message?></div>
+    <?php endif; ?>
+</div>

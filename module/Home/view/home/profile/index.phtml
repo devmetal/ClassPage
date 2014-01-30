@@ -1,0 +1,53 @@
+
+<?php $comments = $this->user->getComments(); ?>
+<?php $items = $this->user->getItems(); ?>
+
+<div class="row">
+    <div class="span4">
+        <h3>Felhasználói adatok</h3>
+        <table class="table table-striped table-bordered">
+            <tbody>
+                <tr>
+                    <th>Becenév</th>
+                    <td><?=$this->user->getNick()?></td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td><?=$this->user->getEmail()?></td>
+                </tr>
+                <tr>
+                    <th>Kommentek száma</th>
+                    <td><?=count($comments)?></td>
+                </tr>
+                <tr>
+                    <th>Tételek száma</th>
+                    <td><?=count($items)?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="span8">
+        <h3>Feltöltött tételek</h3>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Tárgy neve</th>
+                    <th>Tétel címe</th>
+                    <th>Tétel száma</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($items as $item): ?>
+                <tr>
+                    <td><?=$item->getCategory()->getName()?></td>
+                    <td><?=$item->getTitle()?></td>
+                    <td><?=$item->getItemNum()?></td>
+                    <td><a href="/items/edit/<?=$item->getId()?>">Szerkesztés</a> |
+                        <a href="/items/remove/<?=$item->getId()?>">Törlés</a></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
