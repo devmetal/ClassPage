@@ -1,24 +1,80 @@
-<section>
-    <div class="news">
-        <header>
-            <h1>Friss oktatási hírek</h1>
-        </header>
+<div class="row">
+    <div class="col-md-12">
+        <h1>Legfrissebb tételek</h1>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body">
+              Panel content
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body">
+              Panel content
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body">
+              Panel content
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body">
+              Panel content
+            </div>
+        </div>
     </div>
-</section>
-    
+</div>
+
 <script>
 $.get('/news', function(result){
     $.each(result.feeds, function(index, feed){
-        var feedDiv = $("<article class='feed'></article>");
+        var feedDiv = $("<div class='col-md-4 feed-col'></div>"),
+            first = true;
+        
+        feedDiv.append("<div class='title'><h3>"+index+"</h3></div>");
         
         $.each(feed.posts, function(postIndex, post){
             var postDiv = $("<article class='post'></article>");
-            postDiv.append("<header><a href='"+post.link+"'>"+post.title+"</a></header>");
-            postDiv.append("<div class='desc'>"+post.desc+"</div>");
+            
+            if (first) {
+                postDiv.addClass("visible f");
+                first = false;
+            }
+            
+            postDiv.append("<strong><a href='"+post.link+"'>"+post.title+"</a></strong>");
+            postDiv.append("<div class='desc'>"+post.desc+"<br><em>"+ post.date +"</em></div>");
             feedDiv.append(postDiv);
         });
         
-        $(".news").append(feedDiv);
+        $("#news-target").append(feedDiv);
+        
+        $("#more-news").click(function(){
+            $(this).toggleClass("all");
+            if ($(this).hasClass("all")) {
+                $("#news-target").find(".post").not(".visible").addClass("visible");
+                $(this).html("Kevesebb hír");
+            } else {
+                $("#news-target").find(".post").not(".f").removeClass("visible");
+                $(this).html("Több hír");
+            }
+        });
+        
+        $("#hide-news").click(function(){
+           $(".head-news").fadeOut(); 
+        });
+        
+        $(".head-news").fadeIn();
     });
 },'json');
 </script>

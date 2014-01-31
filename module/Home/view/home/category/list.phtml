@@ -1,0 +1,11 @@
+<hgroup>
+    <h1>Tételek</h1>
+</hgroup>
+<section id="items">
+    <?php foreach ($this->categories as $ct): ?>
+        <article><a href="/items/view/<?=$ct['id']?>">
+            <?=$ct['name']?> - (<?=$ct['items_count']?>)
+            </a>
+        </article>
+    <?php endforeach; ?>
+</section>

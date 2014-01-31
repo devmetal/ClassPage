@@ -16,6 +16,7 @@ class LoginForm extends Form implements InputFilterProviderInterface {
         
         $this->setAttribute("action", "/auth");
         $this->setAttribute("method", "post");
+        $this->setAttribute("role", "form");
         
         $this->add(array(
             'name' => 'email',
@@ -23,7 +24,7 @@ class LoginForm extends Form implements InputFilterProviderInterface {
                 'type' => 'text',
                 'id' => 'email',
                 'placeholder' => 'Email cím',
-                'class' => 'input-block-level'
+                'class' => 'form-control'
             )
         ));
         
@@ -33,7 +34,7 @@ class LoginForm extends Form implements InputFilterProviderInterface {
                 'type' => 'password',
                 'id' => 'pass',
                 'placeholder' => 'Jelszó',
-                'class' => 'input-block-level'
+                'class' => 'form-control'
             )
         ));
         

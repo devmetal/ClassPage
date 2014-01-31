@@ -1,0 +1,24 @@
+.head-news {
+    background-color: #dadada;
+    margin-top: -20px;
+    padding: 20px 0px;
+    display: none;
+}
+
+.head-news .post {
+    display: none;
+    text-align: justify;
+    margin-bottom: 10px;
+}
+
+.head-news .post.visible {
+    display: block;
+}
+
+.head-news .post a {
+    color:black;
+}
+
+.head-news .post .desc {
+    margin-top: 5px;
+}

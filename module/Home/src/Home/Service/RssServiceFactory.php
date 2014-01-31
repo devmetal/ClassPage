@@ -14,7 +14,8 @@ class RssServiceFactory implements FactoryInterface {
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $config = $serviceLocator->get('config');
         $feeds = $config['rss_feeds'];
-        $rssService = new RssService($feeds);
+        $max = $config['rss_max_post_per_feed'];
+        $rssService = new RssService($feeds,$max);
         return $rssService;
     }
 }

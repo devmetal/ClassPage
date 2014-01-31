@@ -61,8 +61,8 @@ return array(
                         'id' => '[0-9][0-9]*'
                     ),
                     'defaults' => array(
-                        'controller' => 'Home\Controller\Item',
-                        'action' => 'index'
+                        'controller' => 'Home\Controller\Category',
+                        'action' => 'list'
                     )
                 )
             ),
@@ -93,15 +93,23 @@ return array(
     
     'controllers' => array(
         'factories' => array(
-            'Home\Controller\Index' => 
-                'Home\Controller\IndexControllerFactory'
+            'Home\Controller\Index' => function($sm) {
+                $rss = $sm->getServiceLocator()->get('rssFeeds');
+                $c = new \Home\Controller\IndexController();
+                $c->setRssService($rss);
+                
+                return $c;
+            }
         ),
         'invokables' => array(
             'Home\Controller\Item' => 
                 'Home\Controller\ItemController',
             
             'Home\Controller\Profile' => 
-                'Home\Controller\ProfileController'
+                'Home\Controller\ProfileController',
+            
+            'Home\Controller\Category' =>
+                'Home\Controller\CategoryController'
         )
     ),
     
@@ -140,10 +148,11 @@ return array(
         )
     ),
     
+    'rss_max_post_per_feed' => 5,
     'rss_feeds' => array(
-        'http://eduline.hu/rss',
-        'http://www.oktatas.hu/rss',
-        'http://www.felvi.hu/felveteli/rss',
+        'oktatas.hu' => 'http://www.oktatas.hu/rss',
+        'eduline.hu' =>  'http://eduline.hu/rss',
+        'felvi.hu' => 'http://www.felvi.hu/felveteli/rss',
     )
 );
 ?>

@@ -12,37 +12,68 @@
             'type' => 'image/vnd.microsoft.icon', 
             'href' => $this->basePath() . '/img/favicon.ico'))?>
         
-        <link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700' rel='stylesheet' type='text/css'>
         <?=$this->headLink()
-            ->prependStylesheet($this->basePath() . '/css/spans.css')
-            ->prependStylesheet($this->basePath() . '/css/style.css')?>
+            ->prependStylesheet($this->basePath() . '/css/head-news.css')
+            ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
+            ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css');?>
         
         <?php echo $this->headScript()
+            ->prependFile($this->basePath() . '/js/bootstrap.min.js')
             ->prependFile($this->basePath() . '/js/accordion.js')
             ->prependFile($this->basePath() . '/js/jquery.form.min.js')
             ->prependFile($this->basePath() . '/js/jquery.upload.js')
             ->prependFile($this->basePath() . '/js/jquery.min.js')
             ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
             ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
+            
         ; ?>
     </head>
     <body>
-        <nav>
-            <div class="nav">
-                <div>
-                    <div><a href="<?=$this->url('home')?>">Haza</a></div>
+        
+        <div class="navbar navbar-default navbar-static-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Online Érettségi Központ</a>
                 </div>
-                <div>
-                    <div><a href="<?=$this->url('items')?>">Tételek</a></div>
-                </div>
-                <div>
-                    <div><a href="<?=$this->url('items', array('action' => 'upload'))?>">Feltöltés</a></div>
+                
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="nav navbar-nav">
+                        <li><a href="<?=$this->url('home')?>">Főlap</a></li>
+                        <li><a href="<?=$this->url('items')?>">Tételek</a></li>
+                        <li><a href="<?=$this->url('items', array('action' => 'upload'))?>">Feltöltés</a></li>
+                    </ul>
                 </div>
             </div>
-        </nav>
-        <div class="content">
+        </div>
+        
+        <div class="container-fluid head-news">
+            <div class="container">
+                <div class="row" id="news-target">
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button type="button" id="more-news" class="btn btn-primary">
+                            Több hír
+                        </button>
+                        <button type="button" id="hide-news" class="btn btn-danger">
+                            Bezárás
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container">
             <?=$this->content?>
         </div>
+        
         <footer>
             
         </footer>
