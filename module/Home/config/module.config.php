@@ -52,6 +52,20 @@ return array(
                     )
                 )
             ),
+            'item' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/item[/[:action][/:id]]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z0-9_-][a-zA-Z0-9_-]*',
+                        'id' => '[0-9][0-9]*'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Home\Controller\Item',
+                        'action' => 'index'
+                    )
+                )
+            ),
             'items' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -143,6 +157,10 @@ return array(
             },
             'categoryMenu' => function($sm) {
                 return new Home\Helper\View\CategoryMenu(
+                        $sm->getServiceLocator()->get('Model\Category'));
+            },
+            'categoryListPanel' => function($sm) {
+                return new \Home\Helper\View\CategoryListPanel(
                         $sm->getServiceLocator()->get('Model\Category'));
             }
         )

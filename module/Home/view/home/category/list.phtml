@@ -1,11 +1,64 @@
-<hgroup>
-    <h1>Tételek</h1>
-</hgroup>
-<section id="items">
-    <?php foreach ($this->categories as $ct): ?>
-        <article><a href="/items/view/<?=$ct['id']?>">
-            <?=$ct['name']?> - (<?=$ct['items_count']?>)
-            </a>
-        </article>
-    <?php endforeach; ?>
-</section>
+<div class="row">
+    <div class="col-md-12">
+        <h1>Tételek</h1>
+    </div>
+    <div class="col-md-12">
+    <section id="items">
+        
+        <?php $rowOpen = true; ?>
+        <?php $rowClose = false; ?>
+        <?php $itemsInRow = 0; ?>
+        
+        <?php foreach ($this->categories as $ct): ?>
+        
+            <?php if ($rowOpen === TRUE): ?>
+                <?php $rowOpen = false; ?>
+                <div class="row">
+            <?php endif; ?>
+        
+            <div class="col-md-4 category">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">
+                          <a href="/items/view/<?=$ct['id']?>"><?=$ct['name']?> - (<?=$ct['items_count']?>)</a>
+                      </h3>
+                    </div>
+                    <div class="panel-body">
+                        <?php $top5Item = $this->categoryListPanel()
+                                ->getTopNItem($ct['id'],5); ?>
+                        <?php foreach($top5Item as $item): ?>
+                            <a href="/item/download/<?=$item['id']?>" class="btn btn-default item-button">
+                                <span class="glyphicon glyphicon-star"></span>
+                                <?=$item['title']?> - <em><?=$item['created']->format('Y.m.d')?></em>
+                            </a>
+                        <?php endforeach; ?>
+                        <a href="#" class="btn btn-primary item-button">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                            További tételek a témában
+                        </a>
+                        <a href="#" class="btn btn-info item-button">
+                            <span class="glyphicon glyphicon-save"></span>
+                            Összes letöltése
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <?php $itemsInRow++; ?>
+            <?php if ($itemsInRow === 3) {
+                $itemsInRow = 0;
+                $rowClose = true;
+                $rowOpen = true;
+            } ?>
+            
+            <?php if ($rowClose === TRUE): ?>
+                <?php $rowClose = false; ?>
+                </div>
+            <?php endif; ?>
+            
+        <?php endforeach; ?>
+        <?php if ($itemsInRow > 0): ?>
+        </div>
+        <?php endif; ?>
+    </section>
+</div>
+</div>

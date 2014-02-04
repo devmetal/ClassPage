@@ -48,6 +48,23 @@ class CategoryModel {
                 ->find("ORMs\Entity\Category", $id);
     }
     
+    public function findCategoryTopNItem($cid, $n) {
+        $em = $this->_entityManager;
+        $query = $em->createQuery('
+            SELECT i.title as title, 
+                   i.id as id, 
+                   i.created as created 
+            FROM ORMs\Entity\Item i
+            WHERE i.category = :id
+            ORDER BY created DESC
+        ');
+        
+        $query->setParameter('id', $cid);
+        $query->setMaxResults($n);
+        
+        return $query->getResult();
+    }
+    
     public function findAllOrderByNameAndItems() {
         $em = $this->_entityManager;
         $query = $em->createQuery(
@@ -55,11 +72,12 @@ class CategoryModel {
                     FROM ORMs\Entity\Category c 
                     INNER JOIN c.items it
                     GROUP BY name
-                    ORDER BY name ASC'
+                    ORDER BY items_count DESC, name ASC'
         );
         
         return $query->getResult();
     }
+    
 }
 
 ?>

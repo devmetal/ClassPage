@@ -29,10 +29,14 @@ class ItemFieldset extends Fieldset implements InputFilterProviderInterface{
             'type' => 'text',
             'attributes' => array(
                 'type' => 'text',
-                'id' => 'title'
+                'id' => 'title',
+                'class' => 'form-control'
             ),
             'options' => array(
-                'label' => 'Tétel címe'
+                'label' => 'Tétel címe',
+                'label_attributes' => array(
+                    'class' => 'col-sm-4 control-label'
+                )
             )
         ));
         
@@ -41,26 +45,17 @@ class ItemFieldset extends Fieldset implements InputFilterProviderInterface{
             'type' => 'textarea',
             'attributes' => array(
                 'type' => 'textarea',
-                'id' => 'desc'
+                'id' => 'desc',
+                'class' => 'form-control'
             ),
             'options' =>array(
-                'label' => 'Tétel rövid leírása'
+                'label' => 'Tétel rövid leírása',
+                'label_attributes' => array(
+                    'class' => 'col-sm-4 control-label'
+                )
             )
         ));
         
-        $this->add(array(
-            'name' => 'itemNum',
-            'type' => 'number',
-            'attributes' => array(
-                'type' => 'number',
-                'id' => 'itemNum',
-                'min' => 1,
-                'max' => 40
-            ),
-            'options' => array(
-                'label' => 'Tétel Száma'
-            )
-        ));
         
         $this->add(array(
             'name' => 'category',
@@ -69,18 +64,13 @@ class ItemFieldset extends Fieldset implements InputFilterProviderInterface{
                 'object_manager' => $om,
                 'target_class' => 'ORMs\Entity\Category',
                 'property' => 'name',
-                'label' => 'Kategória/Tantárgy'
-            )
-        ));
-        
-        $this->add(array(
-            'name' => 'desc',
-            'type' => 'textarea',
-            'options' => array(
-                'label' => 'Rövid leírás'
+                'label' => 'Kategória/Tantárgy',
+                'label_attributes' => array(
+                    'class' => 'col-sm-4 control-label'
+                )
             ),
             'attributes' => array(
-                'id' => 'desc'
+                'class' => 'form-control'
             )
         ));
         
@@ -106,6 +96,15 @@ class ItemFieldset extends Fieldset implements InputFilterProviderInterface{
                 'required' => true,
                 'validators' => array(
                     array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                \Zend\Validator\NotEmpty::IS_EMPTY => 
+                                    "A mező nem lehet üres"
+                            )
+                        )
+                    ),
+                    array(
                         'name' => 'Alnum',
                         'options' => array(
                             'messages' => array(
@@ -130,40 +129,6 @@ class ItemFieldset extends Fieldset implements InputFilterProviderInterface{
                                     "Maximum 128 karaktert írhatsz be",
                                 \Zend\Validator\StringLength::TOO_SHORT =>
                                     "Legalább 3 karaktert kell bírnod"
-                            )
-                        )
-                    )
-                )
-            ),
-            'itemNum' => array(
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'options' => array(
-                            'messages' => array(
-                                \Zend\Validator\NotEmpty::IS_EMPTY => 
-                                    "Ezt a mezőt ki kell töltened"
-                            )
-                        )
-                    ),
-                    array(
-                        'name' => 'Digits',
-                        'options' => array(
-                            'messages' => array(
-                                \Zend\Validator\Digits::INVALID => 
-                                    "Csak számokat írhatsz be"
-                            )
-                        )
-                    ),
-                    array(
-                        'name' => 'Between',
-                        'options' => array(
-                            'min' => 1,
-                            'max' => 40,
-                            'messages' => array(
-                                \Zend\Validator\Between::NOT_BETWEEN =>
-                                    "Csak 1 és 40 közötti számokat írhatsz be"
                             )
                         )
                     )

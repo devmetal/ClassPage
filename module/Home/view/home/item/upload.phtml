@@ -10,7 +10,7 @@
     
 </div>
 
-<div id="editing">
+<div class="row" id="editing">
     
 </div>
 
@@ -34,14 +34,14 @@
         
         function uploadStart(file) {
             var row = $("<div class='row'></div>");
-            var bar = $("<div class='span12'><div class='progress'>\n\
-                    <div class='bar' style='width:0%; text-align:left;'>"+file.name+"</div></div></div>");
+            var bar = $("<div class='col-md-12'><div class='progress progress-striped active'>\n\
+                    <div class='progress-bar' style='width:0%; text-align:left;'>"+file.name+"</div></div></div>");
             row.append(bar);
             $("#uploading").append(row);
             
             var onpg = function(e) {
                 var prec = Math.round((e.position / e.total)*100);
-                bar.find(".bar").css("width", prec + "%");
+                bar.find(".progress-bar").css("width", prec + "%");
             };
             
             var onSuccess = function(e) {
@@ -53,11 +53,11 @@
                 }
             };
             
-            $.upload("/items/ajax-upload", file, {upload:{progress:onpg}, success: onSuccess});
+            $.upload("/item/ajax-upload", file, {upload:{progress:onpg}, success: onSuccess});
         }
         
         function editingStart(id) {
-            $.get('/items/ajax-edit/' + id, function(res) {
+            $.get('/item/ajax-edit/' + id, function(res) {
                 var $res = $(res);
                 var form = $res.find("form");
                 
@@ -73,17 +73,38 @@
         function submitHander(form) {
             form.ajaxSubmit({
                 success: function(res) {
-                    var cnt = form.parents('.ajax-editor');
-                    cnt.html("");
-                    cnt.html($(res).find(".item-editor"));
-                    
-                    var newForm = cnt.find("form");
-                    if (newForm) {
-                        newForm.submit(function(){
-                            return submitHander($(this));
-                        });
+                    if (res.error === true) {
+                        var message = res.message;
+                        if (message === 'invalid') {
+                            var errors = res.messages.item;
+                            function T(field) {
+                                var t = {
+                                    'title':'Tétel címe',
+                                    'item[category]':'Kategória',
+                                    'desc':'Leírás'
+                                };
+                                
+                                return t[field];
+                            }
+                            
+                            var errorCt = $("<ul class='errors'></ul>");
+                            $.each(errors,function(key,value){
+                                var field = T(key);
+                                $.each(value, function(validator,message){
+                                    errorCt.append("<li>"+field+":"+message+"</li>");
+                                });
+                            });
+                            
+                            form.before(errorCt);
+                        }
+                    } else {
+                        form.prev(".errors").remove();
+                        
+                        form.find(".form-group")
+                            .addClass("has-success");
                     }
-                }
+                },
+                dataType:'json'
             });
 
             return false;

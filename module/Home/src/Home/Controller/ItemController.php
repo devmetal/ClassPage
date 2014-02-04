@@ -54,7 +54,7 @@ class ItemController extends BaseController {
     public function viewAction() {
         $id = $this->params("id", NULL);
         if ($id === NULL)
-            $this->redirect()->toRoute('items');
+            $this->redirect()->toRoute('home');
         
         $model = $this->_getItemModel();
         $item = $model->findItemById($id);
@@ -65,7 +65,28 @@ class ItemController extends BaseController {
     }
     
     public function downloadAction() {
+        $id = $this->params("id", NULL);
+        if ($id === NULL)
+            $this->redirect()->toRoute('home');
         
+        $model = $this->_getItemModel();
+        $item = $model->findItemById($id);
+        
+        $file = $item->getSrc();
+        
+        $info = new \SplFileInfo($file);
+        $name = $info->getBasename();
+        
+        $response = new \Zend\Http\Response\Stream();
+        $response->setStream(fopen($file,"r"));
+        $response->setStatusCode(200);
+        
+        $headers = new \Zend\Http\Headers();
+        $headers->addHeaderLine('Content-Disposition','attachment; filename="'.$name.'"');
+        
+        $response->setHeaders($headers);
+        
+        return $response;
     }
     
     public function uploadAction() {
@@ -80,7 +101,7 @@ class ItemController extends BaseController {
                 $id = $model->createNewEmptyItem($datas['document']);
                 
                 return $this->redirect()
-                        ->toRoute('items', array(
+                        ->toRoute('item', array(
                             'action' => 'edit',
                             'id' => $id
                         ));
@@ -156,6 +177,58 @@ class ItemController extends BaseController {
         );
     }
     
+    public function doAjaxEditAction() {
+        $request = $this->getRequest();
+        if (!$request->isXmlHttpRequest()) {
+            return $this->redirect()->toRoute("home");
+        }
+        
+        $id = $this->params("id", NULL);
+        if ($id === NULL) {
+            return new JsonModel(array(
+                'error' => true,
+                'message' => 'no-id'
+            ));
+        }
+        
+        if (!$request->isPost()) {
+            return new JsonModel(array(
+                'error' => true,
+                'message' => 'no-post'
+            ));
+        }
+        
+        $post = $request->getPost();
+        
+        $em = $this->getServiceLocator()
+                ->get('ORMs\EntityManager');
+        
+        $item = $this->_getItemModel()
+                ->findItemById($id);
+        
+        $form = new ItemForm($em);
+        $form->setData($post);
+        if ($form->isValid()) {
+            $datas = $form->getData();
+            $itemDatas = $datas['item'];
+            
+            $hydrator = new DoctrineObject($em, 'ORMs\Entity\Item');
+            $hydrator->hydrate($itemDatas, $item);
+            $em->persist($item);
+            $em->flush();
+            
+            return new JsonModel(array(
+                'error' => false
+            ));
+        } else {
+            return new JsonModel(array(
+                'error' => true,
+                'message' => 'invalid',
+                'messages' => $form->getMessages()
+            ));
+        }
+    }
+    
     public function ajaxEditAction() {
         $request = $this->getRequest();
         if (!$request->isXmlHttpRequest()) {
@@ -175,41 +248,12 @@ class ItemController extends BaseController {
         $hydrator = new DoctrineObject($em, 'ORMs\Entity\Item');
         $form->get('item')->populateValues($hydrator->extract($item));
         
-        if ($request->isPost()) {
-            $post = $request->getPost();
-            $form->setData($post);
-            if ($form->isValid()) {
-                $datas = $form->getData();
-                $itemDatas = $datas['item'];
-                
-                $hydrator->hydrate($itemDatas, $item);
-                $em->persist($item);
-                $em->flush();
-                
-                $vm = new ViewModel(array(
-                    'result' => 'success',
-                    'form' => $form,
-                    'id' => $id
-                ));
-                $vm->setTerminal(true);
-                return $vm;
-            } else {
-                $vm = new ViewModel(array(
-                    'result' => 'invalid',
-                    'form' => $form,
-                    'id' => $id
-                ));
-                $vm->setTerminal(true);
-                return $vm;
-            }
-        } else {
-            $vm = new ViewModel(array(
-                'form' => $form,
-                'id' => $id
-            ));
-            $vm->setTerminal(true);
-            return $vm;
-        }
+        $vm = new ViewModel(array(
+            'form' => $form,
+            'id' => $id
+        ));
+        $vm->setTerminal(true);
+        return $vm;
     }
     
     public function removeAction() {
@@ -219,10 +263,6 @@ class ItemController extends BaseController {
         
         $this->_getItemModel()->removeById($id);
         $this->redirect()->toRoute("profile");
-    }
-    
-    public function rateAction() {
-        
     }
     
     /**

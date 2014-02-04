@@ -30,7 +30,8 @@ class ItemForm extends Form{
             'attributes' => array(
                 'type' => 'submit',
                 'value' => 'Tétel mentése',
-                'id' => 'submit'
+                'id' => 'submit',
+                'class' => 'btn btn-default'
             )
         ));
         

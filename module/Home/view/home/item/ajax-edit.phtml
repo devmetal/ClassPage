@@ -1,53 +1,59 @@
 <?php 
 $form = $this->form; $form->prepare(); 
-$form->setAttribute('action', $this->url('items', array(
-    'action' => 'ajax-edit',
+$form->setAttribute('action', $this->url('item', array(
+    'action' => 'do-ajax-edit',
     'params' => array('id' => $this->id)
 ), false, true));
 
-$form->setAttribute('class', 'form-inline ajax-form');
+$form->setAttribute('class', 'form-horizontal ajax-form');
+$form->setAttribute('role', 'form');
 $item = $form->get('item');
 ?>
-<?php if ($this->result && $this->result === 'success'): ?>
-<div>
-<div class="item-editor">
-    Sikeres szerkesztés!
-</div>
-</div>
-<?php else: ?>
-<div class="ajax-editor">
-    
-<div class="item-editor">
-<?= $this->form()->openTag($form); ?>
 
-    <?=$this->formHidden($item->get('id'))?>
-    
-    <div class="span-container">
-        <div class="input span4">
-            <?=$this->formLabel($item->get('title'))?>
-            <?=$this->formText($item->get('title'))?>
-            <?=$this->formElementErrors($item->get('title'));?>
-        </div>
+<div class="col-md-12">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><?=$item->get('title')->getValue()?></h3>
+    </div>
+    <div class="panel-body">
+        <div class="ajax-editor">
+            <div class="item-editor">
+            <?= $this->form()->openTag($form); ?>
 
-        <div class="input span4">
-            <?=$this->formLabel($item->get('category'))?>
-            <?=$this->formSelect($item->get('category'))?>
-            <?=$this->formElementErrors($item->get('category'));?>
-        </div>
-        
-        <div class="input span1">
-            <?=$this->formLabel($item->get('itemNum'))?>
-            <?=$this->formNumber($item->get('itemNum'))?>
-            <?=$this->formElementErrors($item->get('itemNum'));?>
-        </div>
-        
-        
-        <div class="input span1">
-            <label>Mentés</label>
-            <?=$this->formSubmit($form->get('submit'))?>
+                <?=$this->formHidden($item->get('id'))?>
+
+                <div class="form-group">
+                    <?=$this->formLabel($item->get('title'))?>
+                    <div class="col-sm-8">
+                        <?=$this->formText($item->get('title'))?>
+                        <?=$this->formElementErrors($item->get('title'));?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <?=$this->formLabel($item->get('category'))?>
+                    <div class="col-sm-8">
+                        <?=$this->formSelect($item->get('category'))?>
+                        <?=$this->formElementErrors($item->get('category'));?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <?=$this->formLabel($item->get('desc'))?>
+                    <div class="col-sm-8">
+                        <?=$this->formTextarea($item->get('desc'))?>
+                        <?=$this->formElementErrors($item->get('desc'))?>
+                    </div>
+                </div>    
+
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <?=$this->formSubmit($form->get('submit'))?>
+                    </div>
+                </div>
+            <?= $this->form()->closeTag($form); ?>
+            </div>
         </div>
     </div>
-<?= $this->form()->closeTag($form); ?>
 </div>
 </div>
-<?php endif; ?>

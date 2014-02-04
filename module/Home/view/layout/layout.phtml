@@ -13,6 +13,7 @@
             'href' => $this->basePath() . '/img/favicon.ico'))?>
         
         <?=$this->headLink()
+            ->prependStylesheet($this->basePath() . '/css/style.css')
             ->prependStylesheet($this->basePath() . '/css/head-news.css')
             ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
             ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css');?>
@@ -46,7 +47,7 @@
                     <ul class="nav navbar-nav">
                         <li><a href="<?=$this->url('home')?>">Főlap</a></li>
                         <li><a href="<?=$this->url('items')?>">Tételek</a></li>
-                        <li><a href="<?=$this->url('items', array('action' => 'upload'))?>">Feltöltés</a></li>
+                        <li><a href="<?=$this->url('item', array('action' => 'upload'))?>">Feltöltés</a></li>
                     </ul>
                 </div>
             </div>

@@ -57,6 +57,10 @@ class Category {
         return $items->matching($criteria);
     }
     
+    public function getTopNItem($n) {
+        
+    }
+    
     public function addItem($i) {
         $this->items[] = $i;
         return $this;
