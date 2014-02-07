@@ -17,6 +17,12 @@ class Item {
      * @ORM\Column(type="integer", name="itm_id")
      */
     protected $id;
+    
+    /**
+     *
+     * @ORM\Column(type="string", name="itm_is_public")
+     */
+    protected $public = false;
 
     /**
      * @ORM\Column(type="string", name="itm_title")
@@ -24,19 +30,15 @@ class Item {
     protected $title;
     
     /**
-     * @ORM\Column(type="integer", name="itm_num")
-     */
-    protected $itemNum;
-    
-    /**
      * @ORM\Column(type="string", name="itm_src")
      */
     protected $src;
     
     /**
-     * @ORM\Column(type="string", name="itm_state") 
+     * @ORM\Column(type="string", name="itm_type")
      */
-    protected $state;
+    protected $type;
+    
     
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="items")
@@ -58,27 +60,12 @@ class Item {
     /**
      * @ORM\Column(type="integer", name="itm_downloads_count")
      */
-    protected $downloads;
-    
-    /**
-     * @ORM\Column(type="float", name="itm_rate")
-     */
-    protected $rate;
-    
-    /**
-     * @ORM\Column(type="integer", name="itm_rating_count")
-     */
-    protected $ratedCount;
-    
-    /**
-     * @ORM\Column(type="integer", name="itm_rate_sum")
-     */
-    protected $ratedSum;
+    protected $downloads = 0;
     
     /**
      * @ORM\Column(type="string", name="itm_desc", nullable=true)
      */
-    protected $desc;
+    protected $desc = "";
 
     /**
      * @ORM\Column(type="datetime", name="itm_created")
@@ -103,24 +90,6 @@ class Item {
         return $this->comments;
     }
     
-    public function isUploaded() {
-        return ($this->state === "UPLOADED");
-    }
-    
-    public function isSaved() {
-        return ($this->state === "SAVED");
-    }
-    
-    public function setToUploaded() {
-        $this->state = "UPLOADED";
-        return $this;
-    }
-    
-    public function setToSaved() {
-        $this->state = "SAVED";
-        return $this;
-    }
-    
     public function getId() {
         return $this->id;
     }
@@ -142,15 +111,6 @@ class Item {
         $this->desc = $desc;
         return $this;
     }
-    
-    public function getItemNum() {
-        return $this->itemNum;
-    }
-    
-    public function setItemNum($num) {
-        $this->itemNum = $num;
-        return $this;
-    }
 
     public function getSrc() {
         return $this->src;
@@ -160,13 +120,13 @@ class Item {
         $this->src = $src;
         return $this;
     }
-
-    public function getState() {
-        return $this->state;
+    
+    public function getType() {
+        return $this->type;
     }
-
-    public function setState($state) {
-        $this->state = $state;
+    
+    public function setType($type) {
+        $this->type = $type;
         return $this;
     }
 
@@ -196,31 +156,23 @@ class Item {
         $this->downloads = $downloads;
         return $this;
     }
-
-    public function getRate() {
-        return $this->rate;
-    }
-
-    public function setRate($rate) {
-        $this->rate = $rate;
+    
+    public function addDownload() {
+        $this->downloads++;
         return $this;
     }
-
-    public function getRatedCount() {
-        return $this->ratedCount;
+    
+    public function isPublic() {
+        return $this->public === TRUE;
     }
-
-    public function setRatedCount($ratedCount) {
-        $this->ratedCount = $ratedCount;
+    
+    public function setToPrivate() {
+        $this->public = FALSE;
         return $this;
     }
-
-    public function getRatedSum() {
-        return $this->ratedSum;
-    }
-
-    public function setRatedSum($ratedSum) {
-        $this->ratedSum = $ratedSum;
+    
+    public function setToPublic() {
+        $this->public = TRUE;
         return $this;
     }
 

@@ -147,6 +147,10 @@ return array(
                 
     'view_helpers' => array(
         'factories' => array(
+            'logined' => function($sm) {
+                $as = $sm->getServiceLocator()->get('Auth\Service\Auth');
+                return new \Home\Helper\View\Logined($as);
+            },
             'userBar' => function($sm) {
                 return new Home\Helper\View\UserBar(
                     $sm->getServiceLocator()->get('Auth\Service\Auth')

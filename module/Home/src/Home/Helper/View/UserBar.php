@@ -23,7 +23,7 @@ class UserBar extends AbstractHelper {
     
     public function __invoke() {
         $id = $this->_authService->getIdentity();
-        return "Belépve mint: <b>" . $id->getNick() . "</b>";
+        return "<p class='navbar-text'>Belépve mint: <strong>" . $id->getNick() . "</strong></p>";
     }
     
 }

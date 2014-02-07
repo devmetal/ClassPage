@@ -19,15 +19,14 @@
     }
 </style>
 <div class="login-form">
-    <h2>Itt jelentkezz be</h2>
+    <h2>Bejelentkezés</h2>
     <?php
     $this->form->prepare();
     echo $this->form()->openTag($this->form);
     echo $this->formInput($this->form->get('email'));
+    echo "<br>";
     echo $this->formInput($this->form->get('pass'));
-    echo "<label class='checkbox'>Emlékezz rám";
-    echo $this->formCheckbox($this->form->get('remember-me'));
-    echo "</label>";
+    echo "<br>";
     echo $this->formSubmit($this->form->get('submit'));
     echo $this->form()->closeTag();
     ?>

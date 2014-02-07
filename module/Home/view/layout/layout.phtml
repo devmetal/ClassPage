@@ -47,8 +47,32 @@
                     <ul class="nav navbar-nav">
                         <li><a href="<?=$this->url('home')?>">Főlap</a></li>
                         <li><a href="<?=$this->url('items')?>">Tételek</a></li>
-                        <li><a href="<?=$this->url('item', array('action' => 'upload'))?>">Feltöltés</a></li>
+                        
+                        <?php if (!$this->logined()): ?>
+                            <li><a href="<?=$this->url('registration')?>">Regisztrálok!</a></li>
+                        <?php else: ?>
+                            <li><a href="<?=$this->url('item', array('action' => 'upload'))?>">Feltöltés</a></li>
+                        <?php endif; ?>
                     </ul>
+                    
+                    <?php if (!$this->logined()): ?>
+                    
+                    <form method="POST" action="<?=$this->url('auth')?>" class="navbar-right navbar-form">
+                        <input type="email" name="email" placeholder="Email cím" class="form-control">
+                        <input type="password" name="pass" placeholder="Jelszó" class="form-control">
+                        <input type="submit" name="submit" value="Belépés" class="btn btn-default">
+                    </form>
+                    
+                    <?php else: ?>
+                    
+                    <a class="navbar-right navbar-btn btn btn-default" href="<?=$this->url('logout')?>">
+                        Kilépés <span class="glyphicon glyphicon-log-out"></span>
+                    </a>
+                    
+                    <?=$this->userBar()?>
+                    
+                    <?php endif; ?>
+                    
                 </div>
             </div>
         </div>
