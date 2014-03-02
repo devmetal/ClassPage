@@ -15,7 +15,7 @@ class RegistrateForm extends Form {
         
         $this->setAttribute("method", "post");
         $this->setAttribute("enctype", "multipart/form-data");
-        $this->setAttribute("action", "/registration");
+        $this->setAttribute("action", "/registrate/process");
         
         $this->add(array(
             'name' => 'nick',

@@ -85,12 +85,7 @@ class ItemModel {
         $item = new Item();
         $item->setSrc($fileDatas['tmp_name']);
         $item->setTitle($fileDatas['name']);
-        $item->setRate(0);
-        $item->setRatedCount(0);
-        $item->setDownloads(0);
-        $item->setToUploaded();
-        $item->setItemNum(1);
-        $item->setRatedSum(0);
+        $item->setType($fileDatas['type']);
         
         $userId = $this->_serviceManager->get('Auth\Service\Auth')
                 ->getIdentity()

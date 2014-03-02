@@ -23,10 +23,13 @@ return array(
                 return $form;
             },
             'UserModel' => function($sm) {
-                $entityManager = $sm->getServiceLocator()
-                        ->get('ORMs\EntityManager');
+                $entityManager = $sm->get('ORMs\EntityManager');
                 return new \Users\Model\UserModel($entityManager, $sm);
-            }
+            },
+            'EmailHelper' => function($sm) {
+                return new Users\Email\EmailHelper($sm);
+            },
+            'MailTransport' => 'Users\Email\EmailTransportFactory'
         )
     ),
     'router' => array(
@@ -44,6 +47,29 @@ return array(
                     )
                 )
             )
+        )
+    ),
+
+    'mail_config' => array(
+        'development' => array(
+            'from' => 'metaladam91@gmail.com',
+            'type' => 'smtp',
+            'options' => array(
+                'name' => 'metaladam91',
+                'host' => 'smtp.gmail.com',
+                'port' => '465',
+                'connection_class' => 'login',
+                'connection_config' => array(
+                    'ssl' => 'ssl',
+                    'username' => 'metaladam91@gmail.com',
+                    'password' => 'phpakiralynemapascal'
+                )
+            )
+        ),
+        'production' => array(
+            'from' => 'info@elitosztaly.eu',
+            'type' => 'sendmail',
+            'options' => array()
         )
     )
 )

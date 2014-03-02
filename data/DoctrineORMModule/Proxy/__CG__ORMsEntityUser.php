@@ -64,10 +64,10 @@ class User extends \ORMs\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'email', 'pass', 'nick', 'comments', 'items', 'created', 'edited', '_salt');
+            return array('__isInitialized__', 'id', 'email', 'pass', 'nick', 'comments', 'items', 'created', 'edited', 'active', 'code', '_salt');
         }
 
-        return array('__isInitialized__', 'id', 'email', 'pass', 'nick', 'comments', 'items', 'created', 'edited', '_salt');
+        return array('__isInitialized__', 'id', 'email', 'pass', 'nick', 'comments', 'items', 'created', 'edited', 'active', 'code', '_salt');
     }
 
     /**
@@ -373,6 +373,28 @@ class User extends \ORMs\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getComments', array());
 
         return parent::getComments();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function genCode()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'genCode', array());
+
+        return parent::genCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCode()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCode', array());
+
+        return parent::getCode();
     }
 
 }

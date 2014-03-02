@@ -57,6 +57,18 @@ class User {
      */
     protected $edited;
     
+    /**
+     *
+     * @ORM\Column(type="boolean", name="usr_active")
+     */
+    protected $active = false;
+
+    /**
+     *
+     * @ORM\Column(type="string", name="usr_code")
+     */
+    protected $code = "";
+
     private static $_salt = "fnsdjkfsdfdsnfjkdsfksdbnfjksd.-,-,.-,-.,.-54354354.-5,.-34,5.-345,.-5,34";
     
     public function __construct() {
@@ -149,7 +161,23 @@ class User {
     public function getComments() {
         return $this->comments;
     }
+    
+    public function genCode() {
+        $this->code = sha1(uniqid(self::$_salt, true));
+        return $this;
+    }
+    
+    public function getCode() {
+        if ($this->code === "") {
+            $this->genCode();
+        }
+        
+        return $this->code;
+    }
 
+    public static function checkCode($user, $code) {
+        return $user->getCode() === $code;
+    }
     
     public static function checkPass($user, $password) {
         return $user->getPass() === sha1(self::$_salt . $password);
