@@ -39,9 +39,17 @@ class UserModel extends AbstractModel {
             $user->genCode();
             $code = $user->getCode();
             
+            $invCode = $datas['reg-code'];
+            $invition = $entityManager
+                    ->getRepository('ORMs\Entity\Invitation')
+                    ->findOneBy(array('code' => $invCode));
+            
+            $invition->assignToUser($user);
+            
             $this->sendMail($user->getEmail(),$code);
             
             $entityManager->persist($user);
+            $entityManager->persist($invition);
             $entityManager->flush();
             
             return TRUE;
@@ -52,21 +60,45 @@ class UserModel extends AbstractModel {
         }
     }
     
-    private function sendMail($email, $code) {
-        return $this->_sm->get('EmailHelper')
-                ->sendEmail($email, $code);
-    }
     
-    /**
-     * 
-     * @return \Users\Form\Registrate\RegistrateForm
-     */
-    private function _getRegForm() {
-        return $this->_sm->get('RegistrationForm');
-    }
-    
-    public function activateUser(\Zend\Http\Request $req) {
+    public function activateUser($code) {
+        $user = $this->getEntityManager()
+                ->getRepository('ORMs\Entity\User')
+                ->findOneBy(array('code' => $code));
         
+        if (!$user) {
+            return false;
+        } else if ($user->isActive()) {
+            return false;
+        } else {
+            $user->activate();
+            
+            $manager = $this->getEntityManager();
+            $manager->persist($user);
+            $manager->flush();
+            
+            return true;
+        }
+    }
+    
+    public function createInvitationTo($email) {
+        $user = $this->_getAuthService()
+                ->getIdentity();
+        
+        $code = uniqid() . md5(time() . rand(1000,2000));
+        
+        $invition = new \ORMs\Entity\Invitation();
+        $invition->setUsed(false);
+        $invition->setCode($code);
+        $invition->setEmail($email);
+        $user->addInvitation($invition);
+        
+        $em = $this->getEntityManager();
+        $em->persist($user);
+        $em->persist($invition);
+        $em->flush();
+        
+        $this->sendInvition($email, $code, $user->getNick());
     }
     
     public function getUserProfile($id = NULL) {
@@ -79,6 +111,31 @@ class UserModel extends AbstractModel {
     
     public function getUserComments($id = NULL) {
         
+    }
+    
+    private function sendMail($email, $code) {
+        return $this->_sm->get('EmailHelper')
+                ->sendEmail($email, $code);
+    }
+    
+    private function sendInvition($email, $code, $user) {
+        return $this->_sm->get('EmailHelper')
+                ->sendInvitation($email,$code,$user);
+    }
+    
+    /**
+     * 
+     * @return \Users\Form\Registrate\RegistrateForm
+     */
+    private function _getRegForm() {
+        return $this->_sm->get('RegistrationForm');
+    }
+    
+    /**
+     * @return \Auth\Service\AuthService
+     */
+    private function _getAuthService() {
+        return $this->_sm->get('Auth\Service\Auth');
     }
     
 }

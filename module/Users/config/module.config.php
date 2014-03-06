@@ -7,19 +7,31 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Users\Controller\Registrate' => 'Users\Controller\RegistrateController'
+            'Users\Controller\Registrate' => 'Users\Controller\RegistrateController',
+            'Users\Controller\Invitation' => 'Users\Controller\InvitationController'
         )
     ),
     'service_manager' => array(
         'factories' => array(
             'RegistrationFilter' => function($sm) {
-                return new \Users\Form\Registrate\RegisterFilter();
+                $em = $sm->get('ORMs\EntityManager');
+                return new \Users\Form\Registrate\RegisterFilter($em);
             },
             'RegistrationForm' => function($sm) {
                 $filter = $sm->get('RegistrationFilter');
                 $form = new \Users\Form\Registrate\RegistrateForm();
                 $form->setInputFilter($filter);
                 
+                return $form;
+            },
+            'InvitationFormFilter' => function($sm) {
+                $em = $sm->get('ORMs\EntityManager');
+                return new Users\Form\Invitation\InvitationFormFilter($em);
+            },
+            'InvitationForm' => function($sm) {
+                $filter = $sm->get('InvitationFormFilter');
+                $form = new Users\Form\Invitation\InvitationForm();
+                $form->setInputFilter($filter);
                 return $form;
             },
             'UserModel' => function($sm) {
@@ -44,6 +56,32 @@ return array(
                     'defaults' => array(
                         'controller' => 'Users\Controller\Registrate',
                         'action' => 'index'
+                    )
+                )
+            ),
+            'activation' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/activate[/:code]',
+                    'constraints' => array(
+                        'code' => '[A-Za-z0-9]*'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Users\Controller\Registrate',
+                        'action' => 'activate'
+                    )
+                )
+            ),
+            'invitation' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/invitation[/:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z0-9_-][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Users\Controller\Invitation',
+                        'action' => 'create'
                     )
                 )
             )

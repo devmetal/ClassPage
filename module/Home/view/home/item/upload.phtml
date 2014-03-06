@@ -102,6 +102,10 @@
                         
                         form.find(".form-group")
                             .addClass("has-success");
+                        
+                        form.parents(".panel")
+                            .find(".panel-title")
+                            .html("Sikeres szerkesztés")
                     }
                 },
                 dataType:'json'

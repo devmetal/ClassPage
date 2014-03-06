@@ -18,6 +18,20 @@ class RegistrateForm extends Form {
         $this->setAttribute("action", "/registrate/process");
         
         $this->add(array(
+            'name' => 'reg-code',
+            'attributes' => array(
+                'type' => 'text',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Meghívó kód',
+                'label_attributes' => array(
+                    'class' => 'col-sm-3'
+                )
+            )
+        ));
+        
+        $this->add(array(
             'name' => 'nick',
             'attributes' => array(
                 'type' => 'text',

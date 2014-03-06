@@ -2,6 +2,7 @@
 namespace Users\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 
 /**
  * Description of RegistrateController
@@ -44,7 +45,25 @@ class RegistrateController extends AbstractActionController{
     }
     
     public function activateAction() {
+        $code = $this->params()
+                ->fromRoute('code',NULL);
         
+        if (!$code) {
+            return $this->redirect()->toRoute("registration");
+        }
+        
+        $model = $this->getServiceLocator()
+                ->get('UserModel');
+        
+        if ($model->activateUser($code)) {
+            return new ViewModel(array(
+                'result' => 'success'
+            ));
+        } else {
+            return new ViewModel(array(
+                'result' => 'fail'
+            ));
+        }
     }
     
 }

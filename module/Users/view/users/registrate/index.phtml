@@ -12,6 +12,14 @@ $form->setAttribute('role','form');
         <?=$this->formHidden($form->get('security'));?>
         
         <div class="form-group">
+            <?=$this->formLabel($form->get('reg-code'))?>
+            <div class="col-sm-9">
+                <?=$this->formText($form->get('reg-code'))?>
+                <?=$this->formElementErrors($form->get('reg-code'))?>
+            </div>
+        </div>
+        
+        <div class="form-group">
             <?=$this->formLabel($form->get('nick'));?>
             <div class="col-sm-9">
                 <?=$this->formText($form->get('nick'));?>

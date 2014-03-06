@@ -80,6 +80,22 @@ class ItemModel {
                 ->find("ORMs\Entity\Item", (int)$id);
     }
     
+    public function getLatestNItem($n) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('
+            SELECT i.title as title,
+                   i.id as id,
+                   i.created as created,
+                   u.nick as nick,
+                   i.desc as descr FROM ORMs\Entity\Item i
+            JOIN i.uploader u
+            ORDER BY created DESC
+        ');
+        
+        $query->setMaxResults($n);
+        return $query->getResult();
+    }
+    
     
     public function createNewEmptyItem($fileDatas) {
         $item = new Item();

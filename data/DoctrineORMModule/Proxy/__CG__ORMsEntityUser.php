@@ -64,10 +64,10 @@ class User extends \ORMs\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'email', 'pass', 'nick', 'comments', 'items', 'created', 'edited', 'active', 'code', '_salt');
+            return array('__isInitialized__', 'id', 'email', 'pass', 'nick', 'comments', 'items', 'invitations', 'invitation', 'created', 'edited', 'active', 'code', '_salt');
         }
 
-        return array('__isInitialized__', 'id', 'email', 'pass', 'nick', 'comments', 'items', 'created', 'edited', 'active', 'code', '_salt');
+        return array('__isInitialized__', 'id', 'email', 'pass', 'nick', 'comments', 'items', 'invitations', 'invitation', 'created', 'edited', 'active', 'code', '_salt');
     }
 
     /**
@@ -378,6 +378,50 @@ class User extends \ORMs\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function addInvitation(\ORMs\Entity\Invitation $inv)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addInvitation', array($inv));
+
+        return parent::addInvitation($inv);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getInvitations()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getInvitations', array());
+
+        return parent::getInvitations();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setInvitation(\ORMs\Entity\Invitation $inv)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setInvitation', array($inv));
+
+        return parent::setInvitation($inv);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getInvitation()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getInvitation', array());
+
+        return parent::getInvitation();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function genCode()
     {
 
@@ -395,6 +439,28 @@ class User extends \ORMs\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCode', array());
 
         return parent::getCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isActive()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isActive', array());
+
+        return parent::isActive();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function activate()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'activate', array());
+
+        return parent::activate();
     }
 
 }

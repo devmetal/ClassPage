@@ -66,10 +66,10 @@ return array(
                     )
                 )
             ),
-            'items' => array(
+            'category' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/items[/[:action][/:id]]',
+                    'route' => '/category[/[:action][/:id]]',
                     'constraints' => array(
                         'action' => '[a-zA-Z0-9_-][a-zA-Z0-9_-]*',
                         'id' => '[0-9][0-9]*'
@@ -166,6 +166,10 @@ return array(
             'categoryListPanel' => function($sm) {
                 return new \Home\Helper\View\CategoryListPanel(
                         $sm->getServiceLocator()->get('Model\Category'));
+            },
+            'latestNItem' => function($sm) {
+                return new \Home\Helper\View\LatestN(
+                        $sm->getServiceLocator()->get('Model\Item'), 10);
             }
         )
     ),

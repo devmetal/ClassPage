@@ -1,7 +1,27 @@
-<?php
+<?php $res = $this->result; ?>
+<div class="row">
+    <div class="col-md-12">
+        <?php if ($res === 'success'): ?>
+        <div class="alert alert-success">
+            <strong>Sikeres aktiváció</strong>
+        </div>
+        <p>
+            Bejelentkezhetsz az oldalra a
+            megadott email címmel és jelszóval
+        </p>
+        <script>
+        var home = '<?=$this->url('home')?>';
+        var red = function() {
+            window.location.href = home;
+        };
+        
+        var timer = setTimeout(function(){red();},5000);
+        </script>
+        <?php else: ?>
+        <div class="alert alert-danger">
+            <strong>Az aktiváció sikertelen volt</strong>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>

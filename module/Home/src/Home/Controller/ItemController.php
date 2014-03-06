@@ -74,8 +74,7 @@ class ItemController extends BaseController {
         
         $file = $item->getSrc();
         
-        $info = new \SplFileInfo($file);
-        $name = $info->getBasename();
+        $name = trim($item->getTitle()) . '.' . pathinfo($file, PATHINFO_EXTENSION);
         
         $response = new \Zend\Http\Response\Stream();
         $response->setStream(fopen($file,"r"));

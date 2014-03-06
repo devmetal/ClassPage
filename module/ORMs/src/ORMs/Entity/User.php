@@ -44,6 +44,18 @@ class User {
      * @ORM\OneToMany(targetEntity="Item", mappedBy="uploader")
      */
     protected $items;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Invitation", mappedBy="creator")
+     */
+    protected $invitations;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Invitation", inversedBy="user")
+     * @ORM\JoinColumn(name="usr_used_invitation", referencedColumnName="inv_id")
+     */
+    protected $invitation;
+
 
     /**
      *
@@ -74,6 +86,7 @@ class User {
     public function __construct() {
         $this->items = new ArrayCollection();
         $this->comments = new ArrayCollection(); 
+        $this->invitations = new ArrayCollection();
     }
     
     public function getId() {
@@ -162,6 +175,25 @@ class User {
         return $this->comments;
     }
     
+    public function addInvitation(Invitation $inv) {
+        $inv->setCreator($this);
+        $this->invitations[] = $inv;
+        return $this;
+    }
+    
+    public function getInvitations() {
+        return $this->invitations;
+    }
+    
+    public function setInvitation(Invitation $inv) {
+        $this->invitation = $inv;
+        return $this;
+    }
+    
+    public function getInvitation() {
+        return $this->invitation;
+    }
+    
     public function genCode() {
         $this->code = sha1(uniqid(self::$_salt, true));
         return $this;
@@ -173,6 +205,14 @@ class User {
         }
         
         return $this->code;
+    }
+    
+    public function isActive() {
+        return $this->active === true;
+    }
+    
+    public function activate() {
+        $this->active = true;
     }
 
     public static function checkCode($user, $code) {

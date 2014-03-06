@@ -2,7 +2,8 @@
 namespace Users\Form\Registrate;
 
 use Zend\InputFilter\InputFilter;
-
+use DoctrineModule\Validator\ObjectExists;
+use Doctrine\Common\Persistence\ObjectManager;
 /**
  * Description of RegisterFilter
  *
@@ -10,7 +11,36 @@ use Zend\InputFilter\InputFilter;
  */
 class RegisterFilter extends InputFilter {
     
-    public function __construct() {
+    public function __construct(ObjectManager $om) {
+        
+        $repo = $om->getRepository('ORMs\Entity\Invitation');
+        $exists = new ObjectExists(array(
+            'object_repository' => $repo,
+            'fields' => array('code'),
+        ));
+        
+        $invEmail = new InvitationEmailValidator(array(
+            'object_repository' => $repo
+        ));
+        
+        $exists->setMessages(array(
+            ObjectExists::ERROR_NO_OBJECT_FOUND => "A megadott kód 
+                nem található az adatbázisban!"
+        ));
+        
+        $this->add(array(
+            'name' => 'reg-code',
+            'required' => true,
+            'validators' => array(
+                array(
+                    'name' => 'Alnum',
+                    'options' => array(
+                        'allowedWhiteSpace' => false
+                    )
+                ),
+                $exists
+            )
+        ));
         
         $this->add(array(
             'name' => 'nick',
@@ -47,7 +77,8 @@ class RegisterFilter extends InputFilter {
                         'encoding' => 'UTF-8',
                         'max' => 140
                     )
-                )
+                ),
+                $invEmail
             ),
             'filters' => array(
                 array('name' => 'StripTags')

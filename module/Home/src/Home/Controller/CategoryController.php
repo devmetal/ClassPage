@@ -16,6 +16,12 @@ class CategoryController extends BaseController {
      */
     private $_categoryModel;
     
+    /**
+     *
+     * @var \Zipper\ZipperService
+     */
+    private $_zipper;
+    
     public function listAction() {
         $model = $this->_getCategoryModel();
         return new ViewModel(array(
@@ -26,14 +32,54 @@ class CategoryController extends BaseController {
     public function viewAction() {
         $id = $this->params("id", NULL);
         if ($id === NULL)
-            $this->redirect()->toRoute('items');
+            $this->redirect()->toRoute('category');
         
         $model = $this->_getCategoryModel();
         $category = $model->findById($id);
         
         return array(
-            'category' => $category
+            'category' => $category,
+            'items' => $category->getItems()
         );
+    }
+    
+    public function downloadAction() {
+        $id = $this->params()
+                ->fromRoute('id',NULL);
+        
+        if ($id === NULL)
+            return $this->redirect ()
+                >toRoute ('category');
+        
+        $model = $this->_getCategoryModel();
+        $category = $model->findById($id);
+        
+        $items = $category->getItems();
+        $name = $category->getName() . '.zip';
+        
+        $files = array();
+        foreach ($items as $item) {
+            $files[] = array(
+                'path' => $item->getSrc(),
+                'name' => $item->getTitle()
+            );
+        }
+        
+        $zipper = $this->_getZipperService();
+        $zipper->setFiles($files);
+        $zipFile = $zipper->createZip();
+        
+        $response = new \Zend\Http\Response\Stream();
+        $response->setStream(fopen($zipFile,"r"));
+        $response->setStatusCode(200);
+        
+        $headers = new \Zend\Http\Headers();
+        $headers->addHeaderLine('Content-Disposition','attachment; filename="'.$name.'"');
+        $headers->addHeaderLine('Content-Type','application/zip');
+        
+        $response->setHeaders($headers);
+        
+        return $response;
     }
     
     /**
@@ -48,7 +94,19 @@ class CategoryController extends BaseController {
         
         return $this->_categoryModel;
     }
-    
+ 
+    /**
+     * 
+     * @return \Zipper\ZipperService
+     */
+    private function _getZipperService() {
+        if ($this->_zipper === NULL) {
+            $this->_zipper = $this->getServiceLocator()
+                    ->get('ZipperService');
+        }
+        
+        return $this->_zipper;
+    }
 }
 
 ?>

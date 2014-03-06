@@ -38,6 +38,30 @@ class EmailHelper  {
                 ->send($message);
     }
     
+    public function sendInvitation($address, $code, $sender) {
+        $html = new \Zend\Mime\Part("<h1>Meghívásod érkezett!</h1>
+            <p>{$sender} nick névvel rendelkező felhasználó 
+                meghívást küldött neked az elitosztaly.eu oldalra.</p>
+            <h2>Regisztrációs kódod: {$code}</h2>
+            <p>A fenti kódot a regisztrációs felületen kell
+            megadnod!</p>
+            <p>Regisztráció <a href='http://elitosztaly.eu' target='_blank'>Itt</a></p>");
+            
+        $html->type = "text/html";
+        
+        $mimeMessage = new \Zend\Mime\Message();
+        $mimeMessage->setParts(array($html));
+        
+        $message = new \Zend\Mail\Message();
+        $message->setTo($address)
+                ->setFrom($this->_getFrom())
+                ->setSubject("Meghívót kaptál")
+                ->setBody($mimeMessage);
+        
+        return $this->_getTransport()
+                ->send($message);
+    }
+    
     private function _getTransport() {
         return $this->sm->get('MailTransport');
     }

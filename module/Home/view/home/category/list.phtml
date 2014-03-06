@@ -20,7 +20,11 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                       <h3 class="panel-title">
-                          <a href="/items/view/<?=$ct['id']?>"><?=$ct['name']?> - (<?=$ct['items_count']?>)</a>
+                          <?php $url = $this->url('category',array(
+                              'action' => 'view',
+                              'id' => $ct['id']
+                          ));?>
+                          <a href="<?=$url?>"><?=$ct['name']?> - (<?=$ct['items_count']?>)</a>
                       </h3>
                     </div>
                     <div class="panel-body">
@@ -32,11 +36,15 @@
                                 <?=$item['title']?> - <em><?=$item['created']->format('Y.m.d')?></em>
                             </a>
                         <?php endforeach; ?>
-                        <a href="#" class="btn btn-primary item-button">
+                        <a href="<?=$url?>" class="btn btn-primary item-button">
                             <span class="glyphicon glyphicon-chevron-right"></span>
                             További tételek a témában
                         </a>
-                        <a href="#" class="btn btn-info item-button">
+                        <?php $downloadLink = $this->url('category',array(
+                            'action' => 'download',
+                            'id' => $ct['id']
+                        )); ?>
+                        <a href="<?=$downloadLink?>" target="_blank" class="btn btn-info item-button">
                             <span class="glyphicon glyphicon-save"></span>
                             Összes letöltése
                         </a>

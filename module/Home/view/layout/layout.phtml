@@ -46,12 +46,13 @@
                 <div class="collapse navbar-collapse" id="navbar">
                     <ul class="nav navbar-nav">
                         <li><a href="<?=$this->url('home')?>">Főlap</a></li>
-                        <li><a href="<?=$this->url('items')?>">Tételek</a></li>
+                        <li><a href="<?=$this->url('category')?>">Tételek</a></li>
                         
                         <?php if (!$this->logined()): ?>
                             <li><a href="<?=$this->url('registration')?>">Regisztrálok!</a></li>
                         <?php else: ?>
                             <li><a href="<?=$this->url('item', array('action' => 'upload'))?>">Feltöltés</a></li>
+                            <li><a href="<?=$this->url('invitation', array('action' => 'create'))?>">Meghívó küldése</a></li>
                         <?php endif; ?>
                     </ul>
                     

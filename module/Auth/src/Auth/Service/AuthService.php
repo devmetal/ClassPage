@@ -44,6 +44,12 @@ class AuthService {
         $res = $auth->authenticate();
         if ($res->isValid()) {
             
+            $user = $this->getIdentity();
+            if (!$user->isActive()) {
+                $auth->clearIdentity();
+                return false;
+            }
+            
             if ($remember == 1) {
                 $auth->getStorage()->setRememberMe();
             }
