@@ -1,6 +1,58 @@
+html, body, #main-container { 
+    height: 100%; 
+}
+
+body > #main-container { 
+    height: auto; 
+    min-height: 100%; 
+}
+
+#footer {
+ clear: both;
+ position: relative;
+ z-index: 10;
+ height: 350px;
+ margin-top: -350px;
+ background-color: #c2c2c2;
+ box-shadow: 0px 0px 5px black;
+}
+
+iframe {
+    display: none;
+}
+
+#main-content { 
+    padding-bottom: 350px; 
+}
+
+
 .category .item-button {
     font-size: 80%;
     margin-bottom: 10px;
     width: 100%;
     text-align: left;
+}
+
+.category .download-button {
+    font-size: 80%;
+}
+
+.category .item-label {
+    font-size: 80%;
+}
+
+.item-panel .panel-footer {
+   font-size: 70%;
+}
+
+form#reply label {
+    font-size: 12px;
+}
+
+form#reply ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    color:red;
+    font-size: 80%;
 }

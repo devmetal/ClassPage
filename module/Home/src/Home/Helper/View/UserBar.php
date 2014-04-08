@@ -23,7 +23,9 @@ class UserBar extends AbstractHelper {
     
     public function __invoke() {
         $id = $this->_authService->getIdentity();
-        return "<p class='navbar-text'>Belépve mint: <strong>" . $id->getNick() . "</strong></p>";
+        $profileLink = $this->view->url('profile');
+        return "<p class='navbar-text'>Belépve mint: 
+            <a href='".$profileLink."'><strong>" . $id->getNick() . "</strong></a></p>";
     }
     
 }

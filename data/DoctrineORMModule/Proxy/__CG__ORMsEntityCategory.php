@@ -198,6 +198,17 @@ class Category extends \ORMs\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
+    public function getItemsOrderByCreated()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getItemsOrderByCreated', array());
+
+        return parent::getItemsOrderByCreated();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getTopNItem($n)
     {
 

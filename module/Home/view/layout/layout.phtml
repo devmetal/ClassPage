@@ -2,7 +2,7 @@
 <html lang="hu">
     <head>
         <meta charset="utf-8">
-        <?=$this->headTitle('11C Ez class')?>
+        <?=$this->headTitle('Elit osztály')?>
         <?=$this->headMeta()
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
             ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')?>
@@ -30,78 +30,100 @@
         ; ?>
     </head>
     <body>
-        
-        <div class="navbar navbar-default navbar-static-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Online Érettségi Központ</a>
-                </div>
-                
-                <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="nav navbar-nav">
-                        <li><a href="<?=$this->url('home')?>">Főlap</a></li>
-                        <li><a href="<?=$this->url('category')?>">Tételek</a></li>
-                        
+        <div id="main-container">
+            <div class="navbar navbar-default navbar-static-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/">Elit osztály</a>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="navbar">
+                        <ul class="nav navbar-nav">
+                            <li><a href="<?=$this->url('home')?>">Főlap</a></li>
+                            <li><a href="<?=$this->url('category')?>">Tételek</a></li>
+
+                            <?php if (!$this->logined()): ?>
+                                <li><a href="<?=$this->url('registration')?>">Regisztrálok!</a></li>
+                            <?php else: ?>
+                                <li><a href="<?=$this->url('item', array('action' => 'upload'))?>">Feltöltés</a></li>
+                                <li><a href="<?=$this->url('invitation', array('action' => 'create'))?>">Meghívó küldése</a></li>
+                            <?php endif; ?>
+                        </ul>
+
                         <?php if (!$this->logined()): ?>
-                            <li><a href="<?=$this->url('registration')?>">Regisztrálok!</a></li>
+
+                        <form method="POST" action="<?=$this->url('auth')?>" class="navbar-right navbar-form">
+                            <input type="email" name="email" placeholder="Email cím" class="form-control">
+                            <input type="password" name="pass" placeholder="Jelszó" class="form-control">
+                            <input type="submit" name="submit" value="Belépés" class="btn btn-default">
+                        </form>
+
                         <?php else: ?>
-                            <li><a href="<?=$this->url('item', array('action' => 'upload'))?>">Feltöltés</a></li>
-                            <li><a href="<?=$this->url('invitation', array('action' => 'create'))?>">Meghívó küldése</a></li>
+
+                        <a class="navbar-right navbar-btn btn btn-default" href="<?=$this->url('logout')?>">
+                            Kilépés <span class="glyphicon glyphicon-log-out"></span>
+                        </a>
+
+                        <?=$this->userBar()?>
+
                         <?php endif; ?>
-                    </ul>
-                    
-                    <?php if (!$this->logined()): ?>
-                    
-                    <form method="POST" action="<?=$this->url('auth')?>" class="navbar-right navbar-form">
-                        <input type="email" name="email" placeholder="Email cím" class="form-control">
-                        <input type="password" name="pass" placeholder="Jelszó" class="form-control">
-                        <input type="submit" name="submit" value="Belépés" class="btn btn-default">
-                    </form>
-                    
-                    <?php else: ?>
-                    
-                    <a class="navbar-right navbar-btn btn btn-default" href="<?=$this->url('logout')?>">
-                        Kilépés <span class="glyphicon glyphicon-log-out"></span>
-                    </a>
-                    
-                    <?=$this->userBar()?>
-                    
-                    <?php endif; ?>
-                    
+
+                    </div>
                 </div>
             </div>
+
+            <div class="container-fluid head-news">
+                <span class="glyphicon glyphicon-remove" id="hide-news"></span>
+                <div class="container">
+                    <div class="row" id="news-target">
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <span class="glyphicon glyphicon-chevron-down" id="more-news"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container" id="main-content">
+                <?=$this->content?>
+            </div> 
         </div>
         
-        <div class="container-fluid head-news">
+        <div id="footer">
             <div class="container">
-                <div class="row" id="news-target">
-                    
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <h4>Visszajelzés</h4>
+                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12 text-center">
-                        <button type="button" id="more-news" class="btn btn-primary">
-                            Több hír
-                        </button>
-                        <button type="button" id="hide-news" class="btn btn-danger">
-                            Bezárás
-                        </button>
+                    <div class="col-md-6 col-md-offset-3" id="feedback-form-container">
+                        <?=$this->feedbackForm()?>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="container">
-            <?=$this->content?>
-        </div>
-        
-        <footer>
-            
-        </footer>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-48957693-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
     </body>
 </html>

@@ -82,31 +82,36 @@ class UserModel extends AbstractModel {
     }
     
     public function createInvitationTo($email) {
-        $user = $this->_getAuthService()
-                ->getIdentity();
+        $userId = $this->_getAuthService()
+                ->getIdentity()->getId();
+        
+        $user = $this->getEntityManager()
+                ->find('ORMs\Entity\User', $userId);
         
         $code = uniqid() . md5(time() . rand(1000,2000));
+        
+        $em = $this->getEntityManager();
         
         $invition = new \ORMs\Entity\Invitation();
         $invition->setUsed(false);
         $invition->setCode($code);
         $invition->setEmail($email);
+        
         $user->addInvitation($invition);
         
-        $em = $this->getEntityManager();
-        $em->persist($user);
         $em->persist($invition);
         $em->flush();
         
         $this->sendInvition($email, $code, $user->getNick());
     }
     
-    public function getUserProfile($id = NULL) {
-        
-    }
-    
-    public function getUserItems($id = NULL) {
-        
+    public function getUserItems($id) {
+        $user = $this->getEntityManager()->find("ORMs\Entity\User", $id);
+        if ($user) {
+            return $user->getItemsOrderByCreatedAndCategory();
+        } else {
+            return false;
+        }
     }
     
     public function getUserComments($id = NULL) {

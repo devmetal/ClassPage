@@ -2,7 +2,7 @@
 namespace Users\Form\Registrate;
 
 use Zend\Form\Form;
-
+use Zend\Captcha\AdapterInterface;
 /**
  * Description of RegistrateForm
  *
@@ -10,7 +10,8 @@ use Zend\Form\Form;
  */
 class RegistrateForm extends Form {
     
-    public function __construct() {
+    public function __construct(AdapterInterface $captchaAdapter) {
+        
         parent::__construct("Regisztráció");
         
         $this->setAttribute("method", "post");
@@ -110,7 +111,12 @@ class RegistrateForm extends Form {
             )
         ));
         
+        $captcha = new \Zend\Form\Element\Captcha('captcha');
+        $captcha->setCaptcha($captchaAdapter);
+        $this->add($captcha);
+        
         $this->add(new \Zend\Form\Element\Csrf('security'));
+        
     }
     
 }

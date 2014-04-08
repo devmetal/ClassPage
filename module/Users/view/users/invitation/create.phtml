@@ -23,6 +23,12 @@
                     <?=$this->formElementErrors($email)?>
                 </div>
                 
+                <div class="form-group">
+                    <?=$this->formLabel($form->get('captcha'))?>
+                    <?=$this->formElement($form->get('captcha'))?>
+                    <?=$this->formElementErrors($form->get('captcha'))?>
+                </div>
+                
                 <?=$this->formElement($form->get('csrf'))?>
                 
                 <?php $submit = $form->get('send');

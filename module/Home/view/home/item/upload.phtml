@@ -50,6 +50,21 @@
                         $(this).remove();
                     });
                     editingStart(e.id);
+                } else if (e.result === "invalid") {
+                    var messages = e.messages,
+                        docMessages = messages.document,
+                        alertTag = $("<div class='alert alert-danger'></div>"),
+                        alertContent = $("<p></p>");
+                        
+                    alertContent.append("<strong>"+file.name+": </strong>");
+                    $.each(docMessages, function(key,value){
+                        alertContent.append(value + "<br>");
+                    });
+                    
+                    alertTag.append(alertContent);
+                    row.html("");
+                    row.append($("<div class='col-md-12'></div>")
+                            .append(alertTag));
                 }
             };
             
@@ -128,14 +143,16 @@
                         "margin-top":"134px"
                     })
         ).append(
-                $("<div>Word, Excel, Pdf, PowerPoint, Txt fájlokat fogadok el</div>")
+                $("<div>Word, Excel, Pdf, PowerPoint, Txt fájlokat fogadok el.<br>\n\
+                    <a href='/item/regular-upload'>Vagy válaszd a hagyományos fájlfeltöltést</a></div>")
                     .css({
                         "position": "absolute",
                         "left": "3px",
                         "bottom": "0px",
                         "color":"#333",
                         "font-size":"12px",
-                        "font-style":"italic"
+                        "font-style":"italic",
+                        "text-align":"left"
                     })
         );
         

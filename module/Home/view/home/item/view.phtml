@@ -1,40 +1,46 @@
-<?php $item = $this->item; ?>
-<div class="span12">
-    <div class="page-header">
-        <h1><?=$item->getTitle()?></h1>
-        <span>
-            <?=$item->getUploader()->getNick()?> | 
-            <?=date('Y-m-d',$item->getCreated()->getTimestamp())?>
-        </span>
-    </div>
-    
-    <div class="row">
-        <div class="span6">
-            <h3>Leírás</h3>
-            <p style="text-align:justify">
-                <?php if (($desc = $item->getDesc()) !== NULL): ?>
-                    <?=$desc?>
-                <?php else: ?>
-                    Nem adtak meg leírást
-                <?php endif; ?>
-            </p>
+<div class="row">
+    <?php $item = $this->item; ?>
+    <?php $downloadLink =  $this->url('item',array(
+        'action' => 'download',
+        'id' => $item->getId()
+    ));?>
+    <?php $backLink = $this->url('category',array(
+        'action' => 'view',
+        'id' => $item->getCategory()->getId()
+    )); ?>
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1><?=$item->getTitle()?></h1>
+            <span>
+                <?=$item->getUploader()->getNick()?> | 
+                <?=$item->getCreated()->format('Y-m-d H:i:s')?>
+            </span>
         </div>
-        <div class="span6">
-            <?php 
-            $commentsN = $item->getComments()->count(); 
-            $comments = $item->getComments();
-            ?>
-            
-            <h3>Kommentek száma: <?=$commentsN?></h3>
-            <?php if ($commentsN > 0): ?>
-            <ul>
-                <?php foreach ($comments as $comment): ?>
-                <li>
-                    <p><?=$comment->getUser()->getNick()?></p>
-                </li>
-                <?php endforeach; ?>
-            </ul>
-            <?php endif; ?>
+
+        <div class="row">
+            <div class="col-md-6">
+                <a href="<?=$backLink?>" class="btn btn-default">
+                    <span class="glyphicon glyphicon-arrow-left"></span> Vissza a kategóriához
+                </a>
+                <a href="<?=$downloadLink?>" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-download-alt"></span> Letöltés
+                </a>
+            </div>
         </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Leírás</h3>
+                <p style="text-align:justify">
+                    <?php if (($desc = $item->getDesc()) !== NULL): ?>
+                        <?=$desc?>
+                    <?php else: ?>
+                        Nem adtak meg leírást
+                    <?php endif; ?>
+                </p>
+            </div>
+        </div>
+        
+        
     </div>
 </div>

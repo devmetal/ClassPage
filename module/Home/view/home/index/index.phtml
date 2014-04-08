@@ -1,11 +1,9 @@
 <div class="row" style="margin-top: 20px;">
-    <div class="col-md-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">Legfrissebb 10 tétel</div>
-            <div class="panel-body">
-                <?=$this->latestNItem()?>
-            </div>
+    <div class="col-md-8 col-md-offset-2">
+        <div class="page-header">
+            <h2>Legújabb 10 tétel</h2>
         </div>
+        <?=$this->latestNItem()?>
     </div>
 </div>
 
@@ -15,7 +13,7 @@ $.get('/news', function(result){
         var feedDiv = $("<div class='col-md-4 feed-col'></div>"),
             first = true;
         
-        feedDiv.append("<div class='title'><h3>"+index+"</h3></div>");
+        feedDiv.append("<div class='title'>"+index+"</div>");
         
         $.each(feed.posts, function(postIndex, post){
             var postDiv = $("<article class='post'></article>");
@@ -34,12 +32,15 @@ $.get('/news', function(result){
         
         $("#more-news").click(function(){
             $(this).toggleClass("all");
+            
             if ($(this).hasClass("all")) {
                 $("#news-target").find(".post").not(".visible").addClass("visible");
-                $(this).html("Kevesebb hír");
+                $(this).removeClass("glyphicon-chevron-down")
+                        .addClass("glyphicon-chevron-up");
             } else {
                 $("#news-target").find(".post").not(".f").removeClass("visible");
-                $(this).html("Több hír");
+                $(this).removeClass("glyphicon-chevron-up")
+                        .addClass("glyphicon-chevron-down");
             }
         });
         

@@ -3,6 +3,28 @@
     margin-top: -20px;
     padding: 20px 0px;
     display: none;
+    
+    font-size: 80%;
+    position: relative;
+}
+
+.head-news #hide-news {
+    position: absolute;
+    top:10px;
+    right: 10px;
+    color:tomato;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.head-news #more-news {
+    font-size: 20px;
+    color:#72a0d6;
+    cursor: pointer;
+}
+
+.head-news .title {
+    font-size: 20px;
 }
 
 .head-news .post {

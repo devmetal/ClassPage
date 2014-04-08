@@ -12,6 +12,8 @@ class ZipperService {
     
     private $_tempDir;
     
+    private $_dest = NULL;
+    
     public function __construct($tempDir) {
         $this->_tempDir = $tempDir;
     }
@@ -20,9 +22,18 @@ class ZipperService {
         $this->_files = $files;
     }
     
+    public function setDestination($dest) {
+        $this->_dest = $dest;
+    }
+    
     public function createZip() {
         $zip = new \ZipArchive();
-        $zfile = tempnam($this->_tempDir, 'tmp');
+        $zfile = NULL;
+        
+        if ($this->_dest === NULL) {
+            $zfile = tempnam($this->_tempDir, 'tmp');
+        }
+        
         $zip->open($zfile, \ZipArchive::CREATE);
         
         foreach ($this->_files as $file) {
@@ -40,7 +51,6 @@ class ZipperService {
                 $zip->addFromString(basename($file),  file_get_contents($file));
             }
         }
-        
         $zip->close();
         
         return $zfile;

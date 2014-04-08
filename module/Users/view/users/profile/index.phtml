@@ -1,0 +1,75 @@
+<?php
+$user = $this->user;
+$items = $this->items;
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Alap adatok</h3>
+        <dl class="dl-horizontal">
+            <dt>Email cím</dt>
+            <dd><?=$user->getEmail()?></dd>
+            <dt>Becenév</dt>
+            <dd><?=$user->getNick()?></dd>
+            <dt>Feltöltött tételek</dt>
+            <dd><?=$items->count()?></dd>
+            <dt>Csatlakoztál</dt>
+            <dd><?=$user->getCreated()->format('Y-m-d')?></dd>
+        </dl>
+    </div>
+</div>
+
+<?php if ($items): ?>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Tételeid
+            </div>
+            <div class="panel-body">
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        <tr>
+                            <th>Cím</th>
+                            <th>Kategória</th>
+                            <th>Feltöltve</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($items as $item): $id = $item->getId(); ?>
+                        <tr>
+                            <td><?=$item->getTitle()?></td>
+                            <td><?=$item->getCategory()->getName()?></td>
+                            <td><?=$item->getCreated()->format('Y-m-d H:i:s')?></td>
+                            <td>
+                                <?php $redirect = base64_encode($this->url('profile')); ?>
+                                <a href="<?=$this->url('item/redirecting',array(
+                                    'action' => 'edit',
+                                    'id' => $id,
+                                    'redirect' => $redirect
+                                ))?>" class="btn btn-default">Szerkesztés</a>
+                            </td>
+                            <td>
+                                <a href="<?=$this->url('item',array(
+                                    'action' => 'download',
+                                    'id' => $id
+                                ))?>" class="btn btn-default">Letöltés</a>
+                            </td>
+                            <td>
+                                <a href="<?=$this->url('item',array(
+                                    'action' => 'remove',
+                                    'id' => $id
+                                ))?>" class="btn btn-danger">Törlés</a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

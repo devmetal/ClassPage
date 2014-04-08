@@ -41,7 +41,7 @@ class User {
     
     /**
      *
-     * @ORM\OneToMany(targetEntity="Item", mappedBy="uploader")
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="uploader", fetch="EXTRA_LAZY")
      */
     protected $items;
     
@@ -55,7 +55,12 @@ class User {
      * @ORM\JoinColumn(name="usr_used_invitation", referencedColumnName="inv_id")
      */
     protected $invitation;
-
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Group", inversedBy="tags")
+     * @ORM\JoinTable(name="groups_users")
+     */
+    protected $groups;
 
     /**
      *
@@ -87,6 +92,7 @@ class User {
         $this->items = new ArrayCollection();
         $this->comments = new ArrayCollection(); 
         $this->invitations = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
     
     public function getId() {
@@ -166,6 +172,16 @@ class User {
         return $items->matching($criteria);
     }
     
+    public function getItemsOrderByCreatedAndCategory(){
+        $items = $this->getItems();
+        
+        $criteria = Criteria::create()
+                ->orderBy(array("created" => Criteria::DESC))
+                ->orderBy(array("category" => Criteria::DESC));
+        
+        return $items->matching($criteria);
+    }
+    
     public function addComment($comment) {
         $this->comments[] = $comment;
         return $this;
@@ -183,6 +199,10 @@ class User {
     
     public function getInvitations() {
         return $this->invitations;
+    }
+    
+    public function addGroup(Group $g) {
+        $this->groups[] = $g;
     }
     
     public function setInvitation(Invitation $inv) {

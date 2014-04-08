@@ -1,0 +1,59 @@
+<?php
+$form = $this->form;
+$form->setAttribute('role','form');
+$form->setAttribute('method','post');
+$form->setAttribute('class','form-horizontal');
+$form->setAttribute('action',$this->url('feedback'));
+?>
+<?=$this->form()->openTag($form)?>
+<div class='form-group'>
+    <?=$this->formLabel($form->get('email'))?>
+    <div class='col-sm-10'>
+        <?=$this->formElement($form->get('email'))?>
+        <?=$this->formElementErrors($form->get('email'))?>
+    </div>
+</div>
+
+<div class='form-group'>
+<?=$this->formLabel($form->get('category'))?>
+    <div class='col-sm-10'>
+        <?=$this->formElement($form->get('category'))?>
+        <?=$this->formElementErrors($form->get('category'))?>
+    </div>
+</div>
+
+<div class='form-group'>
+<?=$this->formLabel($form->get('desc'))?>
+    <div class='col-sm-10'>
+        <?=$this->formElement($form->get('desc'))?>
+        <?=$this->formElementErrors($form->get('desc'))?>
+    </div>
+</div>
+
+<?=$this->formElement($form->get('security'))?>
+
+<div class='form-group'>
+    <div class='col-sm-offset-2 col-sm-10'>
+        <?=$this->formElement($form->get('submit'))?>
+    </div>
+</div>
+
+<?=$this->form()->closeTag($form)?>
+
+<script>
+$("#reply").submit(function(){
+    var $form = $(this);
+    $("#feedback-form-container").fadeOut('fast',function(){
+        $form.ajaxSubmit({
+            success: function(res) {
+                $("#feedback-form-container").html("");
+                $("#feedback-form-container").append($(res));
+                $("#feedback-form-container").fadeIn('fast');
+            },
+            dataType:'html'
+        });
+    });
+
+    return false;
+});
+</script>

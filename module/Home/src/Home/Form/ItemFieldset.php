@@ -89,11 +89,20 @@ class ItemFieldset extends Fieldset implements InputFilterProviderInterface{
             'desc' => array(
                 'required' => false,
                 'filters' => array(
-                    array('name' => 'StripTags')
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim')
                 ),
             ),
             'title' => array(
                 'required' => true,
+                'filters' => array(
+                    array(
+                        'name' => 'StringTrim'
+                    ),
+                    array(
+                        'name' => 'StripTags'
+                    )
+                ),
                 'validators' => array(
                     array(
                         'name' => 'NotEmpty',
@@ -105,28 +114,14 @@ class ItemFieldset extends Fieldset implements InputFilterProviderInterface{
                         )
                     ),
                     array(
-                        'name' => 'Alnum',
-                        'options' => array(
-                            'messages' => array(
-                                \Zend\I18n\Validator\Alnum::INVALID =>
-                                    "Csak betűket és számokat írhatsz be",
-                                \Zend\I18n\Validator\Alnum::NOT_ALNUM => 
-                                    "Csak betűket és számokat írhatsz be",
-                                \Zend\I18n\Validator\Alnum::STRING_EMPTY =>
-                                    "Ez a mező nem lehet üres!"
-                            ),
-                            'allowWhiteSpace' => true
-                        )
-                    ),
-                    array(
                         'name' => 'StringLength',
                         'options' => array(
                             'min' => 3,
-                            'max' => 128,
+                            'max' =>  64,
                             'encoding' => 'utf-8',
                             'messages' => array(
                                 \Zend\Validator\StringLength::TOO_LONG => 
-                                    "Maximum 128 karaktert írhatsz be",
+                                    "Maximum 64 karaktert írhatsz be",
                                 \Zend\Validator\StringLength::TOO_SHORT =>
                                     "Legalább 3 karaktert kell bírnod"
                             )

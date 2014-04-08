@@ -10,7 +10,7 @@ use Zend\InputFilter\InputFilter;
  *
  * @author adam
  */
-class Upload extends Form{
+class Upload extends Form {
     
     public function __construct() {
         parent::__construct("create-item");
@@ -26,6 +26,11 @@ class Upload extends Form{
         $file->setAttribute('id', 'document')
                 ->setAttribute('class', 'upload-element');
         $this->add($file);
+        
+        $submit = new Element\Submit('submit');
+        $submit->setAttribute('class', 'btn btn-default')
+                ->setValue("Feltöltés");
+        $this->add($submit);
     }
     
     private function _addFilters() {
@@ -47,10 +52,28 @@ class Upload extends Form{
                 ->attachByName(
                     'fileextension', 
                     array(
-                        'extension' => array('doc', 'docx', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx', 'txt')
+                        'extension' => array('doc', 'docx', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'),
+                        'messages' => array(
+                            \Zend\Validator\File\Extension::FALSE_EXTENSION => 
+                                "Hibás fájlkiterjesztés! Csak doc, docx, pdf, xls, xlsx, ppt, pptx és
+                                    txt fájlokat tölthetsz fel. Javasoljuk a doc vagy a pdf használatát.",
+                            \Zend\Validator\File\Extension::NOT_FOUND => 
+                                "Hibás fájlkiterjesztés! Csak doc, docx, pdf, xls, xlsx, ppt, pptx és
+                                    txt fájlokat tölthetsz fel. Javasoljuk a doc vagy a pdf használatát."
+                        )
                     )
                 )
-                ->attachByName('filesize', array('max' => '10MB'));
+                ->attachByName(
+                    'filesize', 
+                    array(
+                        'max' => '10MB',
+                        'messages' => array(
+                            \Zend\Validator\File\Size::TOO_BIG => 
+                                "A feltölteni kívánt fájl túl nagy! 
+                                    10 megabájt a felső határ."
+                        )
+                    )
+                );
         
         $inputFilter->add($fileInput);
         $this->setInputFilter($inputFilter);

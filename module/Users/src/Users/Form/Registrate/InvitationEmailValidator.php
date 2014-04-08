@@ -16,9 +16,9 @@ class InvitationEmailValidator extends AbstractValidator {
     
     protected $messageTemplates = array(
         self::EMAIL_NOT_PASS => 
-            "A megadott meghívókód egy másik email címhez tartozik!",
+            "A megadott email címhez nem ez a kód tartozik!!",
         self::REG_CODE_NULL =>
-            "A meghívó kódot meg kell adnod!"
+            "Az email címhez tartozó meghívókód hibás!"
     );
     
     /**

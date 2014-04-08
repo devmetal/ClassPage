@@ -1,0 +1,26 @@
+<?php
+$id = $this->id;
+$item = $this->item;
+?>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                Biztos vagy benne?
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-danger">
+                    Biztos hogy törlöd a(z) <?=$item->getTitle()?> című tételt?
+                </div>
+                <?php $action = $this->url('item',array(
+                    'action' => 'remove',
+                    'id' => $id
+                ));?>
+                <form name="confirmation" method="post" action="<?=$action?>">
+                    <input class="btn btn-danger" type="submit" name="confirm" value="Igen">
+                    <input class="btn btn-default" type="submit" name="confirm" value="Nem">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

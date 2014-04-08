@@ -1,28 +1,68 @@
-<h1>Szerkesztés</h1>
-<div class="item-edit-form">
-    <?php $form = $this->form; $form->prepare(); ?>
-    
-    <?=$this->horizontalForm()->openTag($form);?>
-    
-        <?php $item = $form->get('item'); ?>
-        <?=$this->formHidden($item->get('id'))?>
-        <?=$this->formHidden($form->get('security'))?>
-    
-        <?=$this->horizontalFormRow($item->get('title'))?>
-        <?=$this->horizontalFormRow($item->get('category'))?>
-        <?=$this->horizontalFormRow($item->get('itemNum'))?>
-        <?=$this->horizontalFormRow($item->get('desc'))?>
-        <?=$this->horizontalFormRow($form->get('submit'))?>
-    
-    <?=$this->horizontalForm()->closeTag($form);?>
-</div>
+<?php 
+$form = $this->form; $form->prepare(); 
 
-<?php if( count($form->getMessages()) > 0) : ?>
-<div class="errors">
-    <?=$this->formElementErrors($item->get('title'))?>
-    <?=$this->formElementErrors($item->get('id'))?>
-    <?=$this->formElementErrors($form->get('security'))?>
-    <?=$this->formElementErrors($item->get('category'))?>
-    <?=$this->formElementErrors($item->get('itemNum'))?>
+if (!$this->redirect) {
+    $form->setAttribute('action', $this->url('item', array(
+        'action' => 'edit',
+        'params' => array('id' => $this->id)
+    ), false, true));
+} else {
+    $form->setAttribute('action', $this->url('item/redirecting', array(
+        'action' => 'edit',
+        'id' => $this->id,
+        'redirect' => $this->redirect
+    )));
+}
+
+$form->setAttribute('class', 'form-horizontal ajax-form');
+$form->setAttribute('role', 'form');
+$item = $form->get('item');
+?>
+
+<div class="col-md-12">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><?=$item->get('title')->getValue()?></h3>
+    </div>
+    <div class="panel-body">
+        <div class="ajax-editor">
+            <div class="item-editor">
+            <?= $this->form()->openTag($form); ?>
+
+                <?=$this->formHidden($item->get('id'))?>
+
+                <div class="form-group">
+                    <?=$this->formLabel($item->get('title'))?>
+                    <div class="col-sm-8">
+                        <?=$this->formText($item->get('title'))?>
+                        <?=$this->formElementErrors($item->get('title'));?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <?=$this->formLabel($item->get('category'))?>
+                    <div class="col-sm-8">
+                        <?=$this->formSelect($item->get('category'))?>
+                        <?=$this->formElementErrors($item->get('category'));?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <?=$this->formLabel($item->get('desc'))?>
+                    <div class="col-sm-8">
+                        <?=$this->formTextarea($item->get('desc'))?>
+                        <?=$this->formElementErrors($item->get('desc'))?>
+                    </div>
+                </div>    
+
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <?=$this->formSubmit($form->get('submit'))?>
+                    </div>
+                </div>
+            <?= $this->form()->closeTag($form); ?>
+            </div>
+        </div>
+    </div>
 </div>
-<?php endif; ?>
+</div>

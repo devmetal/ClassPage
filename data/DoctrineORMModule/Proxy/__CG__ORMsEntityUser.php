@@ -356,6 +356,17 @@ class User extends \ORMs\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function getItemsOrderByCreatedAndCategory()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getItemsOrderByCreatedAndCategory', array());
+
+        return parent::getItemsOrderByCreatedAndCategory();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function addComment($comment)
     {
 

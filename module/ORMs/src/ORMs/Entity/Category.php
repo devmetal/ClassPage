@@ -57,6 +57,15 @@ class Category {
         return $items->matching($criteria);
     }
     
+    public function getItemsOrderByCreated() {
+        $items = $this->getItems();
+        
+        $crit = Criteria::create()
+                ->orderBy(array("created" => Criteria::DESC));
+        
+        return $items->matching($crit);
+    }
+    
     public function getTopNItem($n) {
         
     }

@@ -39,7 +39,7 @@ class CategoryController extends BaseController {
         
         return array(
             'category' => $category,
-            'items' => $category->getItems()
+            'items' => $category->getItemsOrderByCreated()
         );
     }
     

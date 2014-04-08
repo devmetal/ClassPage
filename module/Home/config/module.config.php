@@ -42,6 +42,16 @@ return array(
                     )
                 )
             ),
+            'feedback' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/feedback',
+                    'defaults' => array(
+                        'controller' => 'Home\Controller\Feedback',
+                        'action' => 'send'
+                    )
+                )
+            ),
             'news' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
@@ -63,6 +73,15 @@ return array(
                     'defaults' => array(
                         'controller' => 'Home\Controller\Item',
                         'action' => 'index'
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'redirecting' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/[:redirect]'
+                        ),
                     )
                 )
             ),
@@ -123,7 +142,10 @@ return array(
                 'Home\Controller\ProfileController',
             
             'Home\Controller\Category' =>
-                'Home\Controller\CategoryController'
+                'Home\Controller\CategoryController',
+            
+            'Home\Controller\Feedback' => 
+                'Home\Controller\FeedbackController'
         )
     ),
     
@@ -141,6 +163,19 @@ return array(
             },
             'Model\Category' => function($sm) {
                 return new Home\Model\CategoryModel($sm->get('ORMs\EntityManager'), $sm);
+            },
+            'FeedbackFormFilter' => function($sm) {
+                return new Home\Form\FeedbackFormFilter();
+            },
+            'FeedbackForm' => function($sm) {
+                $config = $sm->get('config')['feedback'];
+                
+                $filter = $sm->get('FeedbackFormFilter');
+                
+                $form = new \Home\Form\FeedbackForm($config);
+                $form->setInputFilter($filter);
+                
+                return $form;
             }
         )
     ),
@@ -170,6 +205,17 @@ return array(
             'latestNItem' => function($sm) {
                 return new \Home\Helper\View\LatestN(
                         $sm->getServiceLocator()->get('Model\Item'), 10);
+            },
+            'itemEditButton' => function($sm) {
+                $as = $sm->getServiceLocator()->get('Auth\Service\Auth');
+                return new \Home\Helper\View\ItemEditButton($as);
+            },
+            'itemDeleteButton' => function($sm) {
+                $as = $sm->getServiceLocator()->get('Auth\Service\Auth');
+                return new \Home\Helper\View\ItemDeleteButton($as);
+            },
+            'feedbackForm' => function($sm) {
+                return new \Home\Helper\View\FeedbackForm($sm->getServiceLocator());
             }
         )
     ),
@@ -179,6 +225,24 @@ return array(
         'oktatas.hu' => 'http://www.oktatas.hu/rss',
         'eduline.hu' =>  'http://eduline.hu/rss',
         'felvi.hu' => 'http://www.felvi.hu/felveteli/rss',
+    ),
+                
+    'zipper' => array(
+        'temp_path' => './data/temps',
+        'archives_path' => './data/archives'
+    ),
+                
+    'feedback' => array(
+        'to' => 'feedback@elitosztaly.eu',
+        'categories' => array(
+            'error-report' => 'Hibajelentés',
+            'feature-request' => 'Hiányzó funkció',
+            'grammar' => 'Nyelvtani hiba',
+            'confort' => 'Kényelmetlenség',
+            'design' => 'Kinézet',
+            'general' => 'Általános visszajelzés',
+            'other' => 'Egyéb téma'
+        ),
     )
 );
 ?>

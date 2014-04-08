@@ -8,7 +8,8 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Users\Controller\Registrate' => 'Users\Controller\RegistrateController',
-            'Users\Controller\Invitation' => 'Users\Controller\InvitationController'
+            'Users\Controller\Invitation' => 'Users\Controller\InvitationController',
+            'Users\Controller\Profile'    => 'Users\Controller\ProfileController',
         )
     ),
     'service_manager' => array(
@@ -18,8 +19,13 @@ return array(
                 return new \Users\Form\Registrate\RegisterFilter($em);
             },
             'RegistrationForm' => function($sm) {
+                $captcha = new Zend\Captcha\ReCaptcha();
+                $captcha->setService($sm->get('captchaService'));
+                $captcha->setMessage("Add meg a képen látható kódot!");
+                
                 $filter = $sm->get('RegistrationFilter');
-                $form = new \Users\Form\Registrate\RegistrateForm();
+                
+                $form = new \Users\Form\Registrate\RegistrateForm($captcha);
                 $form->setInputFilter($filter);
                 
                 return $form;
@@ -29,8 +35,12 @@ return array(
                 return new Users\Form\Invitation\InvitationFormFilter($em);
             },
             'InvitationForm' => function($sm) {
+                $captcha = new Zend\Captcha\ReCaptcha();
+                $captcha->setService($sm->get('captchaService'));
+                
                 $filter = $sm->get('InvitationFormFilter');
-                $form = new Users\Form\Invitation\InvitationForm();
+                
+                $form = new Users\Form\Invitation\InvitationForm($captcha);
                 $form->setInputFilter($filter);
                 return $form;
             },
@@ -84,31 +94,23 @@ return array(
                         'action' => 'create'
                     )
                 )
+            ),
+            'profile' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/profile[/:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z0-9_-][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Users\Controller\Profile',
+                        'action' => 'index'
+                    )
+                )
             )
         )
     ),
 
-    'mail_config' => array(
-        'development' => array(
-            'from' => 'metaladam91@gmail.com',
-            'type' => 'smtp',
-            'options' => array(
-                'name' => 'metaladam91',
-                'host' => 'smtp.gmail.com',
-                'port' => '465',
-                'connection_class' => 'login',
-                'connection_config' => array(
-                    'ssl' => 'ssl',
-                    'username' => 'metaladam91@gmail.com',
-                    'password' => 'phpakiralynemapascal'
-                )
-            )
-        ),
-        'production' => array(
-            'from' => 'info@elitosztaly.eu',
-            'type' => 'sendmail',
-            'options' => array()
-        )
-    )
+    
 )
 ?>

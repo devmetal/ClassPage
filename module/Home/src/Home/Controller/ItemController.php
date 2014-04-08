@@ -30,25 +30,10 @@ class ItemController extends BaseController {
     private $_categoryModel;
     
     public function indexAction() {
-        $model = $this->_getCategoryModel();
-        $categories = $model->findAllOrderByNameAndItems();
-        
-        return array(
-            'categories' => $categories
-        );
-    }
-    
-    public function categoryAction() {
-        $id = $this->params("id", NULL);
-        if ($id === NULL)
-            $this->redirect()->toRoute('items');
-        
-        $model = $this->_getCategoryModel();
-        $category = $model->findById($id);
-        
-        return array(
-            'category' => $category
-        );
+        return $this->forward()
+                ->dispatch('Home\Controller\Category', array(
+                    'action' => 'list'
+                ));
     }
     
     public function viewAction() {
@@ -93,9 +78,11 @@ class ItemController extends BaseController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $files = $request->getFiles();
+            
             $form->setData($files);
             if ($form->isValid()) {
                 $datas = $form->getData();
+                
                 $model = $this->_getItemModel();
                 $id = $model->createNewEmptyItem($datas['document']);
                 
@@ -111,6 +98,10 @@ class ItemController extends BaseController {
         );
     }
     
+    public function regularUploadAction() {
+        return $this->uploadAction();
+    }
+    
     public function ajaxUploadAction() {
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest()) {
@@ -118,6 +109,7 @@ class ItemController extends BaseController {
                 $files = $request->getFiles();
                 $form = new Upload();
                 $form->setData($files);
+                
                 if ($form->isValid()) {
                     $datas = $form->getData();
                     
@@ -145,7 +137,21 @@ class ItemController extends BaseController {
                 ->findItemById($this->params("id"));
         
         if (!$item) {
-            return $this->redirect()->toRoute("items");
+            return $this->redirect()->toRoute("home");
+        }
+        
+        $auth = $this->getServiceLocator()
+                ->get('Auth\Service\Auth');
+        
+        if (!$auth->hasIdentity()) {
+            return $this->redirect()->toRoute("home");
+        }
+        
+        $userId = $auth->getIdentity()
+                ->getId();
+        
+        if ($item->getUploader()->getId() !== $userId) {
+            return $this->redirect()->toRoute("home");
         }
         
         $entityManager = $this->getServiceLocator()
@@ -154,6 +160,9 @@ class ItemController extends BaseController {
         
         $object = new DoctrineObject($entityManager, 'ORMs\Entity\Item');
         $form->get('item')->populateValues($object->extract($item));
+        
+        $redirect = $this->params()
+                ->fromRoute('redirect', NULL);
         
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -168,11 +177,22 @@ class ItemController extends BaseController {
                 
                 $entityManager->persist($item);
                 $entityManager->flush();
-                return $this->redirect()->toRoute("profile");
+                
+                if ($redirect !== NULL) {
+                    $redirectUrl = base64_decode($redirect);
+                    return $this->redirect()->toUrl($redirectUrl);
+                } else {
+                    return $this->redirect()->toRoute("item",array(
+                        'action' => 'view',
+                        'id' => $item->getId()
+                    ));
+                }
             }
         }
         return array(
-            'form' => $form
+            'form' => $form,
+            'redirect' => $redirect,
+            'id' => $item->getId()
         );
     }
     
@@ -258,10 +278,36 @@ class ItemController extends BaseController {
     public function removeAction() {
         $id = $this->params("id", NULL);
         if ($id === NULL)
-            $this->redirect()->toRoute("profile");
+            return $this->redirect()->toRoute("home");
         
-        $this->_getItemModel()->removeById($id);
-        $this->redirect()->toRoute("profile");
+        $item = $this->_getItemModel()
+                ->findItemById($this->params("id"));
+        
+        $auth = $this->getServiceLocator()
+                ->get('Auth\Service\Auth');
+        if (!$auth->hasIdentity()) {
+            return $this->redirect()->toRoute("home");
+        }
+        $userId = $auth->getIdentity()
+                ->getId();
+        if ($item->getUploader()->getId() !== $userId) {
+            return $this->redirect()->toRoute("home");
+        }
+        
+        $confirm = $this->params()
+                ->fromPost('confirm',NULL);
+        
+        if ($confirm === 'Igen') {
+            $this->_getItemModel()->removeById($id);
+            return $this->redirect()->toRoute("profile");
+        } else if($confirm === 'Nem') {
+            return $this->redirect()->toRoute("profile");
+        } else {
+            return array(
+                'id' => $id,
+                'item' => $item
+            );
+        }
     }
     
     /**

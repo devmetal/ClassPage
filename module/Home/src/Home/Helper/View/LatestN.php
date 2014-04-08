@@ -24,35 +24,43 @@ class LatestN extends AbstractHelper {
     }
     
     public function __invoke($n = 0) {
-        
         if ($n > 0)
             $this->_n = $n;
         
         $items = $this->_items();
         if (!empty($items)) {
-            $html = "<div class='list-group'>";
+            $html = "<div class='item-list'>";
             foreach ($items as $item) {
                 
                 $id = $item['id'];
                 $uploader = $item['nick'];
                 $desc = $item['descr'];
                 $title = $item['title'];
+                $category = $item['category'];
+                $created = $item['created']->format('Y-m-d');
                 $url = $this->view->url('item',array(
+                    'action' => 'view',
+                    'id' => $id
+                ));
+                $durl = $this->view->url('item',array(
                     'action' => 'download',
                     'id' => $id
                 ));
                 
-                $itemHtml = "<a href='{$url}' class='list-group-item'>";
-                $itemHtml .= "<h4 class='list-group-item-heading'>{$title}</h4>"; 
-                $itemHtml .= "<p class='list-group-item-text'>
-                    Feltöltő neve: {$uploader}<br>
-                    Tétel leírás<br>{$desc}</p>";
-                $itemHtml .= "</a>";
+                $itemHtml = "<div class='panel panel-default item-panel'>";
+                $itemHtml .= "<div class='panel-heading'>
+                    <h3 class='panel-title'><a href='{$url}'>{$title} - {$category}</a></h3>
+                        </div>"; 
+                $itemHtml .= "<div class='panel-body'>
+                        {$desc}<hr><a class='btn btn-default' href='{$url}'>Adatlap</a>
+                            <a class='btn btn-default' href='{$durl}'>Letöltés</a></div>";
+                $itemHtml .= "<div class='panel-footer'>{$uploader} <em>({$created})</em></div>";
+                $itemHtml .= "</div>";
                 
                 $html .= $itemHtml;
             }
             
-            return "</div>" . $html;
+            return $html . "</div>";
         } else {
             return "";
         }

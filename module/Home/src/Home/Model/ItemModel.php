@@ -60,11 +60,17 @@ class ItemModel {
                 ->findOneBy($fields);
     }
     
+    /**
+     * 
+     * @param int $id
+     */
     public function removeById($id) {
-        $item = $this->getItemRepository()
-                ->find($id);
+        $item = $this->findItemById($id);
         
-        if($item) {
+        if($item) {            
+            $this->archivateItemFile($item);
+            $this->removeItemFile($item);
+            
             $this->_entityManager->remove($item);
             $this->_entityManager->flush();
         }
@@ -76,8 +82,14 @@ class ItemModel {
      * @return Item
      */
     public function findItemById($id) {
-        return $this->_entityManager
+        $item = $this->_entityManager
                 ->find("ORMs\Entity\Item", (int)$id);
+        
+        if (!$item) {
+            throw new \Exception("Item with $id - id, is not found");
+        } else {
+            return $item;
+        }
     }
     
     public function getLatestNItem($n) {
@@ -87,8 +99,11 @@ class ItemModel {
                    i.id as id,
                    i.created as created,
                    u.nick as nick,
-                   i.desc as descr FROM ORMs\Entity\Item i
+                   i.desc as descr,
+                   c.name as category
+            FROM ORMs\Entity\Item i
             JOIN i.uploader u
+            JOIN i.category c
             ORDER BY created DESC
         ');
         
@@ -120,6 +135,35 @@ class ItemModel {
         $this->_entityManager->flush();
         
         return $item->getId();
+    }
+    
+    /**
+     * 
+     * @param \ORMs\Entity\Item $item
+     * @return boolean
+     */
+    private function archivateItemFile(Item $item) {
+        $file = $item->getSrc();
+        return $this->getArchivator()
+                ->archivate($file);
+    }
+    
+    /**
+     * 
+     * @param \ORMs\Entity\Item $item
+     * @return boolean
+     */
+    private function removeItemFile(Item $item) {
+        return unlink($item->getSrc());
+    }
+    
+    /**
+     * 
+     * @return \Zipper\Archivator\ArchivatorService
+     */
+    private function getArchivator() {
+        return $this->_serviceManager
+                ->get('ArchivatorService');
     }
 }
 

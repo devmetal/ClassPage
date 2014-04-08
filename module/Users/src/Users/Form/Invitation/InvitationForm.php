@@ -2,7 +2,7 @@
 namespace Users\Form\Invitation;
 
 use Zend\Form\Form;
-
+use Zend\Captcha\AdapterInterface;
 /**
  * Description of InvitationForm
  *
@@ -10,7 +10,7 @@ use Zend\Form\Form;
  */
 class InvitationForm extends Form {
     
-    public function __construct() {
+    public function __construct(AdapterInterface $captchaAdapter) {
         parent::__construct("invitation");
         
         $this->add(array(
@@ -30,6 +30,11 @@ class InvitationForm extends Form {
                 'value' => 'Küldés'
             )
         ));
+        
+        $captcha = new \Zend\Form\Element\Captcha('captcha');
+        $captcha->setCaptcha($captchaAdapter);
+        $captcha->setLabel("A meghívó elküldéséhez kérlek add meg a biztonsági kódot");
+        $this->add($captcha);
         
         $csrf = new \Zend\Form\Element\Csrf('csrf');
         $this->add($csrf);

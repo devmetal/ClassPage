@@ -1,0 +1,28 @@
+<?php
+$form = $this->form;
+$form->setAttribute('enctype','multipart/form-data');
+$form->setAttribute('action',$this->url('item',array(
+    'action' => 'regular-upload'
+)));
+?>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Hagyományos fájlfeltöltő
+            </div>
+            <div class="panel-body">
+                <?=$this->form()->openTag($form)?>
+                <div class="form-group">
+                    <label for="document">Válasszd ki a fájlt amit fel 
+                    szeretnél tölteni</label>
+                    <?=$this->formElement($form->get('document'))?>
+                    <?=$this->formElementErrors($form->get('document'))?>
+                </div>
+                
+                <?=$this->formElement($form->get('submit'))?>
+                <?=$this->form()->closeTag($form)?>
+            </div>
+        </div>
+    </div>
+</div>
