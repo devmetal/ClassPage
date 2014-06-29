@@ -88,9 +88,6 @@ class Comment {
         $this->edited = $edited;
         return $this;
     }
-
-
-    
 }
 
 ?>
